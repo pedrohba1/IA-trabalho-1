@@ -2,11 +2,11 @@
 
 # Install each package. You'll need to add a similar line for each package.
 install:
-	python -m task_scheduling.graph_gen
+	python -m pip install .
 
 # Run tests
 test:
-    python -m unittest discover -s . -p 'test_*.py'
+	python -m unittest discover -s . -p 'test_*.py' -v
 
 # Clean the project directory (optional)
 clean:
