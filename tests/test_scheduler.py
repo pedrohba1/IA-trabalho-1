@@ -6,6 +6,7 @@ import networkx as nx
 
 from graph_gen import generate_tree
 from scheduler import greedy_scheduler
+from algorithms import Astar
 
 
 class test_scheduler(unittest.TestCase):
@@ -23,6 +24,9 @@ class test_scheduler(unittest.TestCase):
         print("\n schedule: " )
         print(schedule)
         print("\n time: ", time)
+
+    def test_Astart(self):
+        print("attempt to solve with Astar")
         
 
 

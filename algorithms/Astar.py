@@ -10,7 +10,7 @@ Node = namedtuple('Node', ['cost', 'heuristic_cost', 'total_cost', 'state', 'par
 # The actual implementations of `goal_check`, `find_neighbors`, `heuristic`, and `cost_between`
 #  will depend on the problem you're solving (e.g., Sudoku, task scheduling, pathfinding).
 
-def a_star_algorithm(initial_state, goal_check, find_neighbors, heuristic, cost_between):
+def Astar(initial_state, goal_check, find_neighbors, heuristic, cost_between):
     """
     Apply the A* algorithm.
 
