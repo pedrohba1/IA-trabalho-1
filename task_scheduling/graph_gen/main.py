@@ -29,7 +29,7 @@ def read_graph(filename):
     return G
 
 
-def generate_tree(num_nodes):
+def generate_tree(num_nodes: int):
     """
     Generate a tree with a specified number of nodes.
     """

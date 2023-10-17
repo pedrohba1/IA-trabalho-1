@@ -6,7 +6,7 @@ install:
 
 # Run tests
 test:
-	python -m unittest discover -s . -p 'test_*.py' -v
+	python -m unittest discover -s ./tests -p 'test_*.py' -v
 
 # Clean the project directory (optional)
 clean:

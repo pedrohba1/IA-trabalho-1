@@ -1,1 +1,1 @@
-from main import generate_tree, read_graph, save_graph, draw
+from .main import *
