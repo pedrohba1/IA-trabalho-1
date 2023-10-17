@@ -15,7 +15,7 @@ def read_graph(filename):
     """
     Read the graph in DOT format from the specified file.
     """
-    G = nx.drawing.nx_agraph.read_dot(filename)
+    G = nx.drawing.nx_agraph.read_dot(filename + ".dot")
 
     # Convert attribute values from strings
     for n, data in G.nodes(data=True):
@@ -44,7 +44,6 @@ def generate_tree(num_nodes):
         # Adding an edge and assigning a random weight to it (transmission time)
         G.add_edge(parent, i, weight=random.randint(1, 10))
 
-    save_graph(G, "test")
     return G
 
 
@@ -73,4 +72,5 @@ def draw(G):
 if __name__ == "__main__":
     num_nodes = 10  # Specify the number of nodes in the tree
     tree = generate_tree(num_nodes)
+    save_graph(tree, "test")
     draw(tree)
