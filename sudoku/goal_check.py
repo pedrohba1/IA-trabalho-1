@@ -12,7 +12,6 @@ def goal_check(grid):
 
     # Function to check if a segment (row or column) is valid
     def is_segment_valid(segment):
-        print('segmneto ',segment)
         # Filter out the unsolved cells, if any
         filtered_segment = [num for num in segment if num != -1]
 
@@ -34,9 +33,8 @@ def goal_check(grid):
             return False
 
     # Check each column
-    for row in range(N):
-        print('checando colunas')
-        column = [grid[row][col] for col in range(N)]
+    for col in range(N):
+        column = [grid[row][col] for row in range(N)]
         if not is_segment_valid(column):
             return False
 

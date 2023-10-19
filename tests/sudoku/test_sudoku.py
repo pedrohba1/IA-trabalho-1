@@ -23,25 +23,29 @@ class test_sudoku(unittest.TestCase):
         Also, an invalid puzzle should return False, which means it is not solved.
         
         """
-        self.assertTrue(goal_check(create_sudoku_puzzle(4, 0)))
-        self.assertFalse(goal_check(create_sudoku_puzzle(4, 2)))
 
-    # def test_Astar(self):
-        # """
-        # Test case to check the A* algorithm's performance on the Sudoku puzzle.
+        solved_sudoku = create_sudoku_puzzle(4, 0)        
+        self.assertTrue(goal_check(solved_sudoku))
 
-        # The test involves solving the puzzle using the A* algorithm and verifying that the solution is correct.
-        # """
-        # sudoku = create_sudoku_puzzle(4, 8)
-        # solution = Astar(
-            # sudoku,
-            # goal_check=goal_check, 
-            # find_neighbors=find_neighbors, 
-            # heuristic=heuristic,
-            # cost_between=cost_between
-        # )  # This is a hypothetical function call; replace with your actual A* function
-        # self.assertTrue(goal_check(
-            # solution), "A* algorithm should successfully solve the Sudoku puzzle.")
+        unsolved_sudoku = create_sudoku_puzzle(4, 2)
+        self.assertFalse(goal_check(unsolved_sudoku))
+
+    def test_Astar(self):
+        """
+        Test case to check the A* algorithm's performance on the Sudoku puzzle.
+# 
+        The test involves solving the puzzle using the A* algorithm and verifying that the solution is correct.
+        """
+        sudoku = create_sudoku_puzzle(4, 8)
+        solution = Astar(
+            sudoku,
+            goal_check=goal_check, 
+            find_neighbors=find_neighbors, 
+            heuristic=heuristic,
+            cost_between=cost_between
+        )  # This is a hypothetical function call; replace with your actual A* function
+        self.assertTrue(goal_check(
+            solution), "A* algorithm should successfully solve the Sudoku puzzle.")
 
     # def test_hill_climbing(self):
     #     """

@@ -15,13 +15,7 @@ Sudoku, a popular logic-based number-placement puzzle, requires a player to popu
 
 ### Task Scheduling
 
-Task scheduling involves the allocation of tasks to resources over given time periods, often with various constraints and objectives. Efficient task scheduling is crucial in numerous fields to enhance productivity and resource management. We address this problem using the following AI strategies:
-
-- **A***: An informed search strategy applying a heuristic to guide its path exploration.
-- **Greedy Search**: A technique making the locally optimal choice, hoping to find the global optimum.
-- **Local Search**: Operates using a single current state and moves to neighboring states judged by defined criteria.
-- **Genetic Algorithm**: Mimics the process of natural selection to generate solutions to optimization and search problems.
-- **Ant Colony Optimization**: A probabilistic technique useful in finding the optimal path, inspired by the behavior of ants searching for food.
+Task scheduling involves the allocation of tasks to resources over given time periods, often with various constraints and objectives. Efficient task scheduling is crucial in numerous fields to enhance productivity and resource management. We address this problem with the same AI strategies as the sudoku problem, even using the same agnostic algorithm but redefining some functions.
 
 ## Getting Started
 
@@ -39,5 +33,4 @@ These instructions will help you get a copy of the project up and running on you
 
 ### Testing
 
-`sudoku` and `task_scheduling` folders have each a Makefile. Enter one of these folders
-and check the Makefile for test script. Usually it's `make test`.
+There is a Makefile in root. The test scripts are there, one for the sudoku another for the task_scheduling implementation.
