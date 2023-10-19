@@ -34,3 +34,9 @@ These instructions will help you get a copy of the project up and running on you
 ### Testing
 
 There is a Makefile in root. The test scripts are there, one for the sudoku another for the task_scheduling implementation.
+
+
+### Pipeline
+
+You can also check the pipeline for the tests that were run. Each update on the code, the tests are re-run and validated by the
+pipeline
