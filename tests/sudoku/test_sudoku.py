@@ -26,11 +26,14 @@ class test_sudoku(unittest.TestCase):
         """
 
         solved_sudoku = create_sudoku_puzzle(4, 0)
-        self.assertTrue(goal_check(solved_sudoku))
+        G = nx.DiGraph()
+        G.add_node(1, state=solved_sudoku)
+        self.assertTrue(goal_check(G, solved_sudoku))
 
         unsolved_sudoku = create_sudoku_puzzle(4, 8)
-
-        self.assertFalse(goal_check(unsolved_sudoku))
+        G2 = nx.DiGraph()
+        G2.add_node(1, state=unsolved_sudoku)
+        self.assertFalse(goal_check(G2, unsolved_sudoku))
 
     def test_find_neighbors(self):
         """
@@ -48,7 +51,6 @@ class test_sudoku(unittest.TestCase):
         neighbors = find_neighbors(G, sudoku_matrix)
         self.assertEqual(len(neighbors), 2)
 
-
     def test_Astar(self):
         """
         Test case to check the A* algorithm's performance on the Sudoku puzzle.
@@ -60,14 +62,12 @@ class test_sudoku(unittest.TestCase):
             find_neighbors=find_neighbors,
             goal_check=goal_check,
             heuristic=heuristic
-        )  
+        )
         print("\n initial state: \n ")
         print_sudoku(solution[1])
 
         print("\n final state \n")
         print_sudoku(solution[-1])
-
-
 
     def test_least_cost(self):
         """
@@ -79,14 +79,12 @@ class test_sudoku(unittest.TestCase):
             cost_between=cost_between,
             find_neighbors=find_neighbors,
             goal_check=goal_check,
-        )  
+        )
         print("\n initial state: \n ")
         print_sudoku(solution[1])
 
         print("\n final state \n")
         print_sudoku(solution[-1])
-
-
 
     # def test_hill_climbing(self):
     #     """
@@ -105,6 +103,5 @@ class test_sudoku(unittest.TestCase):
     #     """
     #     solution = deep_iterative_search(self.sudoku)  # Replace with your actual Deep Iterative Search function
     #     self.assertTrue(goal_check(solution), "Deep Iterative Search should successfully solve the Sudoku puzzle.")
-
 if __name__ == '__main__':
     unittest.main()

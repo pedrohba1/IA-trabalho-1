@@ -92,7 +92,7 @@ def Astar(initial_state: GenericState,
         current_state = G.nodes[current_node]['state']
 
         # Goal check
-        if goal_check(current_state):
+        if goal_check(G, current_state):
             return reconstruct_path(came_from, current_node, G)
 
         visited_nodes.add(current_node)  # Mark the node as visited

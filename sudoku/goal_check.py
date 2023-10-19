@@ -1,4 +1,6 @@
-def goal_check(grid: list[list[int]]) -> bool:
+import networkx as nx
+
+def goal_check(G: nx.DiGraph, grid: list[list[int]]) -> bool:
     """
     Checks if a given Sudoku grid is solved. (if the sudoku in question does not have subgrids)
 
