@@ -2,12 +2,14 @@ def goal_check(grid: list[list[int]]) -> bool:
     """
     Checks if a given Sudoku grid is solved. (if the sudoku in question does not have subgrids)
 
-    Arguments:
-    grid -- a 2D list of integers representing the Sudoku puzzle
+    Args:
+        grid (list[list[int]]): A 2D list of integers representing the Sudoku puzzle
 
     Returns:
-    True if the puzzle is solved, False otherwise
+        bool: True if the puzzle is solved, false otherwise
     """
+
+
     N = len(grid)
 
     # Function to check if a segment (row or column) is valid
