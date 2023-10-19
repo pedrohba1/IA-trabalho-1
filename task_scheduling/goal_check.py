@@ -20,4 +20,9 @@ def goal_check(G: nx.DiGraph, system_state: SystemState) -> bool:
             scheduled_tasks.add(task.node_id)
 
     # Compare against all tasks in the graph
-    all_tasks = set(G.nodes())
+    all_tasks = set([int(i) for i in G.nodes()])
+
+    print(all_tasks)
+    print(scheduled_tasks)
+
+    return scheduled_tasks == all_tasks
