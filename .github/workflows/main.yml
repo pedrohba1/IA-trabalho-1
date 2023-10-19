@@ -34,6 +34,6 @@ jobs:
     # Execute your other steps e.g., run tests
     - name: Run Tests
       run: |
-        make test
+        make test-sudoku && make test-scheduler
 
     # Other build steps...
