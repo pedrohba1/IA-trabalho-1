@@ -4,9 +4,8 @@ import shutil
 import os
 import networkx as nx
 
-from graph_gen import generate_tree
-from scheduler import greedy_scheduler
-from algorithms import Astar
+
+from task_scheduling import generate_tree, greedy_scheduler
 
 
 class test_scheduler(unittest.TestCase):

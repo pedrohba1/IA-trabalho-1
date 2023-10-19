@@ -56,7 +56,6 @@ def least_cost_path(initial_state: any, goal_check: callable, find_neighbors: ca
     came_from = {}  # For path reconstruction
 
     while open_set:
-        # Priority is the actual known cost
         _, current_node = heapq.heappop(open_set)
 
         if current_node in visited_nodes:

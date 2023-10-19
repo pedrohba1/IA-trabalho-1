@@ -4,7 +4,7 @@ import shutil
 import os
 import networkx as nx
 
-from graph_gen import generate_tree, save_graph, read_graph
+from task_scheduling import generate_tree, save_graph, read_graph
 
 class test_graph_gen(unittest.TestCase):
     def setUp(self):
