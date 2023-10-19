@@ -6,7 +6,23 @@ import heapq
 
 from .reconstruct_path import reconstruct_path
 
-def Astar(initial_state: any, goal_check: callable, find_neighbors: callable, heuristic: callable, cost_between: callable) -> list:
+from typing import Callable, List, Any
+
+GenericState = Any
+
+GoalCheckFunc = Callable[[GenericState], bool]
+
+FindNeighborsFunc = Callable[[nx.DiGraph, GenericState], List[GenericState]]
+
+HeuristicFunc = Callable[[nx.DiGraph, GenericState], float]
+
+CostFunc = Callable[[nx.DiGraph, GenericState], float]
+
+def Astar(initial_state: GenericState, 
+          goal_check: GoalCheckFunc,
+          find_neighbors: FindNeighborsFunc,
+          heuristic: HeuristicFunc,
+          cost_between: CostFunc) -> list:
     """
     Implements the A* search algorithm for pathfinding in a graph. The function is a general-purpose pathfinding 
     algorithm designed to operate on any graph-like structure. This specific implementation requires the graph 
@@ -81,7 +97,7 @@ def Astar(initial_state: any, goal_check: callable, find_neighbors: callable, he
 
         visited_nodes.add(current_node)  # Mark the node as visited
 
-        neighbors = find_neighbors(current_state)
+        neighbors = find_neighbors(G, current_state)
         for neighbor in neighbors:
             # add neighbors to the graph first
             node_counter += 1
@@ -106,6 +122,3 @@ def Astar(initial_state: any, goal_check: callable, find_neighbors: callable, he
     print("Failed to reach the goal.")
     # or an empty path, or whatever signals failure appropriately in your application.
     return None
-
-
-

@@ -1,0 +1,2 @@
+
+Sudoku = list[list[int]]

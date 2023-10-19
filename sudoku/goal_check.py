@@ -1,4 +1,4 @@
-def goal_check(grid):
+def goal_check(grid: list[list[int]]) -> bool:
     """
     Checks if a given Sudoku grid is solved. (if the sudoku in question does not have subgrids)
 

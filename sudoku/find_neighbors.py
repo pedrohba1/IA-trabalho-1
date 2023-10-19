@@ -1,18 +1,24 @@
 
 from .is_valid_move import is_valid_move
+import networkx as nx
+from .sudoku_types import Sudoku
 
 
-def find_neighbors(state: list[list[int]]):
+
+def find_neighbors(G: nx.DiGraph, state: Sudoku) -> list[Sudoku] :
     """
     Generate all valid successor states from the current state.
 '   The successors are simply the valid values for the first position of 
     empty cell it finds.
-
-    Arguments:
-    state -- A 2D list representing the Sudoku grid.
+    Args:
+        G (nx.DiGraph): the Sudoku directed graph. In this scenario it is not
+        necessary to use it to generate the next states, but as for pattern for other
+        types of problems, it is inserted here.
+        state (list[list[int]]): A Sudoku, representing the state from which to generate
+        neighbors
 
     Returns:
-    A list of valid successor states.
+        _type_:
     """
     N = len(state)  # Assuming a square grid
     successors = []

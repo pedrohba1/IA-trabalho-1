@@ -43,7 +43,9 @@ class test_sudoku(unittest.TestCase):
             [2,  4,  1,  3],
             [3, -1,  2, -1]
         ]
-        neighbors = find_neighbors(sudoku_matrix)
+        G = nx.DiGraph()
+        G.add_node(1, state=sudoku_matrix)
+        neighbors = find_neighbors(G, sudoku_matrix)
         self.assertEqual(len(neighbors), 2)
 
 

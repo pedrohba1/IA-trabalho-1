@@ -1,4 +1,4 @@
-def heuristic(state):
+def heuristic(state: list[list[int]]) -> float:
     """
     Heuristic function that estimates the cost to reach the goal from the current state.
 
