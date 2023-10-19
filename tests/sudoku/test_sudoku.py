@@ -5,7 +5,7 @@ import os
 import networkx as nx
 
 from sudoku import create_sudoku_puzzle, print_sudoku, goal_check, find_neighbors, heuristic, cost_between
-from algorithms import Astar
+from algorithms import Astar, least_cost_path
 
 
 class test_sudoku(unittest.TestCase):
@@ -50,8 +50,6 @@ class test_sudoku(unittest.TestCase):
     def test_Astar(self):
         """
         Test case to check the A* algorithm's performance on the Sudoku puzzle.
-
-        The test involves solving the puzzle using the A* algorithm and verifying that the solution is correct.
         """
         sudoku = create_sudoku_puzzle(4, 8)
         solution = Astar(
@@ -66,6 +64,27 @@ class test_sudoku(unittest.TestCase):
 
         print("\n final state \n")
         print_sudoku(solution[-1])
+
+
+
+    def test_least_cost(self):
+        """
+        Test case to check the Least Cost Path algorithm's performance on the Sudoku puzzle.
+        """
+        sudoku = create_sudoku_puzzle(4, 8)
+        solution = least_cost_path(
+            initial_state=sudoku,
+            cost_between=cost_between,
+            find_neighbors=find_neighbors,
+            goal_check=goal_check,
+        )  
+        print("\n initial state: \n ")
+        print_sudoku(solution[1])
+
+        print("\n final state \n")
+        print_sudoku(solution[-1])
+
+
 
     # def test_hill_climbing(self):
     #     """
