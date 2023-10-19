@@ -4,6 +4,7 @@
 import networkx as nx
 import heapq
 
+from .reconstruct_path import reconstruct_path
 
 def Astar(initial_state: any, goal_check: callable, find_neighbors: callable, heuristic: callable, cost_between: callable) -> list:
     """
@@ -65,7 +66,7 @@ def Astar(initial_state: any, goal_check: callable, find_neighbors: callable, he
 
     while open_set:
         # Pop the node with the lowest cost from the priority queue
-        current_f_cost, current_node = heapq.heappop(open_set)
+        _, current_node = heapq.heappop(open_set)
 
         # Skip processing if we've already visited this node
         if current_node in visited_nodes:
@@ -107,14 +108,4 @@ def Astar(initial_state: any, goal_check: callable, find_neighbors: callable, he
     return None
 
 
-def reconstruct_path(came_from: dict, current_node: int, graph: nx.digraph) -> list:
-    """
-    Reconstructs the path from the start node to the current node (usually the goal).
-    """
-    total_path = [current_node]
-    while current_node in came_from:
-        current_node = came_from[current_node]
-        # Inserts at the beginning of the list
-        total_path.insert(0, current_node)
-    # Returns the list of states, not node IDs.
-    return [graph.nodes[node]['state'] for node in total_path]
+

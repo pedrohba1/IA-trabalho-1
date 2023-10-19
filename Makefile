@@ -2,8 +2,7 @@
 
 # Install each package. You'll need to add a similar line for each package.
 install:
-	python -m pip install .
-
+	pip install -r requirements.txt
 # Run tests
 # test:
 # 	python -m unittest discover -s ./tests -p 'test_*.py' -v

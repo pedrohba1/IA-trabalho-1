@@ -1,0 +1,36 @@
+name: Python Application Test
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  build:
+    
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11' # Use the latest 3.x version
+
+    - name: Install dependencies
+      run: |
+        make install
+
+    - name: Run tests on scheduler
+      run: |
+        make test-scheduler
+
+    - name: Run tests on sudoku
+      run: |
+        make test-sudoku
+
+    - name: Clean project directory
+      run: |
+        make clean
