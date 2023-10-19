@@ -88,8 +88,9 @@ def least_cost_path(initial_state: GenericState,
             node_counter += 1
             came_from[node_counter] = current_node
             G.add_node(node_counter, state=neighbor)
-            G.add_edge(current_node, node_counter, weight=cost_between(
-                G.nodes[current_node]['state'], G.nodes[node_counter]['state']))
+            G.add_edge(current_node, node_counter, weight=cost_between(G,
+                                                                       G.nodes[current_node]['state'], 
+                                                                       G.nodes[node_counter]['state']))
 
             g_cost = g_cost_map[current_node] + \
                 G[current_node][node_counter]['weight']

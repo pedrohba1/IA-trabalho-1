@@ -18,7 +18,8 @@ HeuristicFunc = Callable[[nx.DiGraph, GenericState], float]
 
 CostFunc = Callable[[nx.DiGraph, GenericState], float]
 
-def Astar(initial_state: GenericState, 
+
+def Astar(initial_state: GenericState,
           goal_check: GoalCheckFunc,
           find_neighbors: FindNeighborsFunc,
           heuristic: HeuristicFunc,
@@ -104,8 +105,9 @@ def Astar(initial_state: GenericState,
             # New path is better, update the parent
             came_from[node_counter] = current_node
             G.add_node(node_counter, state=neighbor)
-            G.add_edge(current_node, node_counter, weight=cost_between(
-                G.nodes[current_node]['state'], G.nodes[node_counter]['state']))
+            G.add_edge(current_node, node_counter, weight=cost_between(G,
+                                                                       G.nodes[current_node]['state'], 
+                                                                       G.nodes[node_counter]['state']))
 
             child_g_cost = g_cost_map[current_node] + \
                 G[current_node][node_counter]['weight']

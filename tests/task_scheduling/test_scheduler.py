@@ -45,6 +45,11 @@ class test_scheduler(unittest.TestCase):
             print(state)
         self.assertEqual(len(next_states), 6)
 
+    def test_goal_check(self):
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        dot_file_path = os.path.join(script_dir, f"example2")
+        G = read_graph(dot_file_path)
+        
 
         
 

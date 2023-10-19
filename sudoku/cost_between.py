@@ -1,12 +1,22 @@
-def cost_between(state1, state2):
-    """
-    Calculate the cost of moving from state1 to state2. 
+import networkx as nx
+from .sudoku_types import Sudoku
 
-    Arguments:
-    state1 -- The current state.
-    state2 -- The neighbor state.
+
+def cost_between(G: nx.DiGraph, state1: Sudoku, state2: Sudoku) -> float:
+    """
+    Calculate the cost of moving from one state to another. 
+
+    In this case, since we only change one number between states, the cost can be 1.
+    This can be explored further to find a better cost function.
+
+    Args:
+        G (nx.DiGraph): A Digraph representing the search space. It is not used in this 
+        specific scenario of the sudoku but the param is necessary for compatibility
+        state1 (Sudoku): A sudoku representation
+        state2 (Sudoku): Another sudoku representation
 
     Returns:
-    The cost of the move. In Sudoku, this is typically constant, as each move involves placing a single number.
+        float: cost value
     """
+
     return 1  # Constant cost for each move in Sudoku

@@ -11,7 +11,7 @@ def save_graph(G, filename):
     nx.drawing.nx_agraph.write_dot(G, filename + ".dot")
 
 
-def read_graph(filename):
+def read_graph(filename: str):
     """
     Read the graph in DOT format from the specified file.
     """
