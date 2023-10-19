@@ -2,9 +2,11 @@
 from .is_valid_move import is_valid_move
 
 
-def find_neighbors(state):
+def find_neighbors(state: list[list[int]]):
     """
     Generate all valid successor states from the current state.
+'   The successors are simply the valid values for the first position of 
+    empty cell it finds.
 
     Arguments:
     state -- A 2D list representing the Sudoku grid.

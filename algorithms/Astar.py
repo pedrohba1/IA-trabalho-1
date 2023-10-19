@@ -1,107 +1,120 @@
 # Author: Pedro Bufulin
 
 
+import networkx as nx
 import heapq
-from collections import namedtuple
-
-# Define a structure for our nodes/states.
-Node = namedtuple('Node', ['cost', 'heuristic_cost', 'total_cost',
-                  'state', 'parent', 'state_id'])  # Added state_id
-
-# The actual implementations of `goal_check`, `find_neighbors`, `heuristic`, and `cost_between`
-#  will depend on the problem you're solving (e.g., Sudoku, task scheduling, pathfinding).
 
 
-def Astar(initial_state, goal_check, find_neighbors, heuristic, cost_between):
+def Astar(initial_state: any, goal_check: callable, find_neighbors: callable, heuristic: callable, cost_between: callable) -> list:
     """
-    Apply the A* algorithm.
+    Implements the A* search algorithm for pathfinding in a graph. The function is a general-purpose pathfinding 
+    algorithm designed to operate on any graph-like structure. This specific implementation requires the graph 
+    to be represented in a way that's compatible with the provided helper functions.
 
-    Arguments:
-    initial_state -- The starting state of the problem.
-    goal_check -- Function to check if the goal has been reached.
-    find_neighbors -- Function to find neighboring states.
-    heuristic -- Function to determine the heuristic cost from a state to the goal.
-    cost_between -- Function to compute the cost between two states.
+    Args:
+        initial_state (any): 
+            The starting state of the search. This is typically a representation of a board, puzzle configuration, 
+            or another state from which the search begins.
+
+        goal_check (callable): 
+            A function that takes a state and returns a boolean indicating if the goal has been reached. It is used 
+            at each step of the algorithm to determine if the search is complete.
+
+        find_neighbors (callable): 
+            A function responsible for expanding (or "generating") the neighbors of the current state. It takes the 
+            current state as an argument and returns a list of possible successor states. These successors are the 
+            states reachable from the current state following the rules defined by the problem domain.
+
+        heuristic (callable): 
+            A function that estimates the cost (or distance) to reach the goal from the current state. This function 
+            is heuristic in nature and does not need to be perfectly accurate. Instead, it guides the A* algorithm 
+            in prioritizing states that seem more promising. It takes the current state as an argument and returns 
+            an integer or float value representing the estimated cost.
+
+        cost_between (callable): 
+            A function that calculates the actual cost of transitioning from the current state to a neighbor state. 
+            This is used by A* to track the actual cost of the path found so far. It takes two states as arguments 
+            (the current state and one of its successors) and returns an integer or float representing the cost of 
+            the transition.
 
     Returns:
-    A tuple (path, cost) where path is a list of states from start to goal, and cost is the total cost of the path.
-    If no path is found, returns (None, float('inf')).
+        list: 
+            It returns the list of the sequence of states chosen in order to find the solution. The state at the
+            end of the list is the final solution. it returns None if it was unable to find a solution
     """
+    G = nx.DiGraph()
 
-   # This dictionary will map each unique ID to a unique state.
-    id_to_state = {1: initial_state}  # The initial state gets ID 1
-    next_id = 2  # The next available unique ID
+    # adds the stat node
+    start_node = 1
+    G.add_node(start_node, state=initial_state)
+    node_counter = 1
 
-    # Create the priority queue as a heap structure.
+    # Data setup
     open_set = []
+    # We push the start node with a priority of 0
+    heapq.heappush(open_set, (0, start_node))
 
-    # Create a dictionary to hold the cost values to reach each node (g-cost), but indexed by state ID now.
-    g_cost = {1: 0}  # The initial state (ID 1) has a g-cost of 0.
+    # Dictionary to keep track of actual costs from start node to current
+    g_cost_map = {start_node: 0}
+    # Estimated total cost from start to goal through the current node
+    f_cost_map = {start_node: heuristic(initial_state)}
 
-    # Create the start node with an initial ID.
-    start_node = Node(cost=0, heuristic_cost=heuristic(initial_state), total_cost=heuristic(initial_state),
-                      state=initial_state, parent=None, state_id=1)  # Added state_id
-
-    heapq.heappush(open_set, start_node)
+    visited_nodes = set()  # Set to keep track of visited nodes (closed set in A* terminology)
+    # For path reconstruction: to keep track of the parent of each node.
+    came_from = {}
 
     while open_set:
-        current_node = heapq.heappop(open_set)
+        # Pop the node with the lowest cost from the priority queue
+        current_f_cost, current_node = heapq.heappop(open_set)
 
-        if goal_check(current_node.state):
-            # Adjusted function call
-            return reconstruct_path(current_node, id_to_state), current_node.cost
+        # Skip processing if we've already visited this node
+        if current_node in visited_nodes:
+            continue
 
-        for neighbor_state in find_neighbors(current_node.state):
-            tentative_g_cost = current_node.cost + \
-                cost_between(current_node.state, neighbor_state)
+        # Extract the actual state associated with the node
+        current_state = G.nodes[current_node]['state']
 
-            neighbor_state_id = None  # We will determine this ID soon.
+        # Goal check
+        if goal_check(current_state):
+            return reconstruct_path(came_from, current_node, G)
 
-            # Check if this state is new. If it is, assign a new ID.
-            # Look through the dictionary values.
-            if neighbor_state not in id_to_state.values():
-                neighbor_state_id = next_id
-                # Store the new state with its ID
-                id_to_state[next_id] = neighbor_state
-                next_id += 1
-            else:
-                # If it's an already encountered state, fetch the corresponding ID.
-                for state_id, state in id_to_state.items():
-                    if state == neighbor_state:
-                        neighbor_state_id = state_id
-                        break
+        visited_nodes.add(current_node)  # Mark the node as visited
 
-            if neighbor_state_id not in g_cost or tentative_g_cost < g_cost[neighbor_state_id]:
-                g_cost[neighbor_state_id] = tentative_g_cost
+        neighbors = find_neighbors(current_state)
+        for neighbor in neighbors:
+            # add neighbors to the graph first
+            node_counter += 1
+            # New path is better, update the parent
+            came_from[node_counter] = current_node
+            G.add_node(node_counter, state=neighbor)
+            G.add_edge(current_node, node_counter, weight=cost_between(
+                G.nodes[current_node]['state'], G.nodes[node_counter]['state']))
 
-                neighbor_node = Node(
-                    cost=tentative_g_cost,
-                    heuristic_cost=heuristic(neighbor_state),
-                    total_cost=tentative_g_cost + heuristic(neighbor_state),
-                    state=neighbor_state,
-                    parent=current_node,
-                    state_id=neighbor_state_id  # Added state_id
-                )
+            child_g_cost = g_cost_map[current_node] + \
+                G[current_node][node_counter]['weight']
 
-                heapq.heappush(open_set, neighbor_node)
+            if node_counter not in g_cost_map or child_g_cost < g_cost_map[node_counter]:
+                # This path to neighbor is better than any previous one. Record it
+                g_cost_map[node_counter] = child_g_cost
+                f_cost_map[node_counter] = child_g_cost + heuristic(neighbor)
 
-    # If we've checked all nodes and not found the goal, return None.
-    return None, float('inf')
+                # Add the neighbor to the open set if not already present
+                heapq.heappush(
+                    open_set, (f_cost_map[node_counter], node_counter))
+
+    print("Failed to reach the goal.")
+    # or an empty path, or whatever signals failure appropriately in your application.
+    return None
 
 
-def reconstruct_path(node, id_to_state):
+def reconstruct_path(came_from: dict, current_node: int, graph: nx.digraph) -> list:
     """
-    Reconstruct the path from the start state to the given node.
-
-    Arguments:
-    node -- The ending node.
-
-    Returns:
-    A list of states representing the path from the start to the end.
+    Reconstructs the path from the start node to the current node (usually the goal).
     """
-    path = []
-    while node.parent is not None:
-        path.append(id_to_state[node.state_id])  # Use the ID to fetch the actual state
-        node = node.parent
-    path.append(id_to_state[node.state_id])  # For the initial state
-    return path[::-1]  # Reversed path from start to goal.
+    total_path = [current_node]
+    while current_node in came_from:
+        current_node = came_from[current_node]
+        # Inserts at the beginning of the list
+        total_path.insert(0, current_node)
+    # Returns the list of states, not node IDs.
+    return [graph.nodes[node]['state'] for node in total_path]

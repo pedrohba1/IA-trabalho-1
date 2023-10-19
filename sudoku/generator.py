@@ -58,7 +58,6 @@ def print_sudoku(grid: list[list[int]]):
     Arguments:
     grid -- a 2D list of integers representing the Sudoku puzzle.
     """
-    print("\n current sudoku:  \n")
     for row in grid:
         formatted_row = ['_' if x == -1 else str(x) for x in row]  # Replace -1 with underscores for visibility
         print(' '.join(formatted_row))  # Print the formatted row

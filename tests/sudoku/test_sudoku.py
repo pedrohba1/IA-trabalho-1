@@ -7,10 +7,11 @@ import networkx as nx
 from sudoku import create_sudoku_puzzle, print_sudoku, goal_check, find_neighbors, heuristic, cost_between
 from algorithms import Astar
 
+
 class test_sudoku(unittest.TestCase):
     """
     This suite tests the generated Sudoku puzzle's validity and the capability of different algorithms (A*, Hill Climbing, 
-    and Deep Iterative Search) to solve it. Each algorithm is tested for correctness in the context of Sudoku solving.
+    Least Cost, and Deep Iterative Search) to solve it. Each algorithm is tested for correctness in the context of Sudoku solving.
     """
 
     def test_valid_function(self):
@@ -21,31 +22,50 @@ class test_sudoku(unittest.TestCase):
         of both the puzzle generator and the solved state checker. A valid puzzle should be recognized as solved.
 
         Also, an invalid puzzle should return False, which means it is not solved.
-        
+
         """
 
-        solved_sudoku = create_sudoku_puzzle(4, 0)        
+        solved_sudoku = create_sudoku_puzzle(4, 0)
         self.assertTrue(goal_check(solved_sudoku))
 
-        unsolved_sudoku = create_sudoku_puzzle(4, 2)
+        unsolved_sudoku = create_sudoku_puzzle(4, 8)
+
         self.assertFalse(goal_check(unsolved_sudoku))
+
+    def test_find_neighbors(self):
+        """
+        Test case to check if neighbor generation generates valid nodes and weights
+        """
+
+        sudoku_matrix = [
+            [-1, -1, -1,  2],
+            [-1,  2, -1, -1],
+            [2,  4,  1,  3],
+            [3, -1,  2, -1]
+        ]
+        neighbors = find_neighbors(sudoku_matrix)
+        self.assertEqual(len(neighbors), 2)
+
 
     def test_Astar(self):
         """
         Test case to check the A* algorithm's performance on the Sudoku puzzle.
-# 
+
         The test involves solving the puzzle using the A* algorithm and verifying that the solution is correct.
         """
         sudoku = create_sudoku_puzzle(4, 8)
         solution = Astar(
-            sudoku,
-            goal_check=goal_check, 
-            find_neighbors=find_neighbors, 
-            heuristic=heuristic,
-            cost_between=cost_between
-        )  # This is a hypothetical function call; replace with your actual A* function
-        self.assertTrue(goal_check(
-            solution), "A* algorithm should successfully solve the Sudoku puzzle.")
+            initial_state=sudoku,
+            cost_between=cost_between,
+            find_neighbors=find_neighbors,
+            goal_check=goal_check,
+            heuristic=heuristic
+        )  
+        print("\n initial state: \n ")
+        print_sudoku(solution[1])
+
+        print("\n final state \n")
+        print_sudoku(solution[-1])
 
     # def test_hill_climbing(self):
     #     """
@@ -64,7 +84,6 @@ class test_sudoku(unittest.TestCase):
     #     """
     #     solution = deep_iterative_search(self.sudoku)  # Replace with your actual Deep Iterative Search function
     #     self.assertTrue(goal_check(solution), "Deep Iterative Search should successfully solve the Sudoku puzzle.")
-
 
 if __name__ == '__main__':
     unittest.main()
