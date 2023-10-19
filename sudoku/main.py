@@ -1,4 +1,4 @@
-from sudoku import create_sudoku_puzzle, print_sudoku
+from generator import create_sudoku_puzzle, print_sudoku
 import math
 
 

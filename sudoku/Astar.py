@@ -5,10 +5,12 @@ import heapq
 from collections import namedtuple
 
 # Define a structure for our nodes/states.
-Node = namedtuple('Node', ['cost', 'heuristic_cost', 'total_cost', 'state', 'parent'])
+Node = namedtuple('Node', ['cost', 'heuristic_cost',
+                  'total_cost', 'state', 'parent'])
 
 # The actual implementations of `goal_check`, `find_neighbors`, `heuristic`, and `cost_between`
 #  will depend on the problem you're solving (e.g., Sudoku, task scheduling, pathfinding).
+
 
 def a_star_algorithm(initial_state, goal_check, find_neighbors, heuristic, cost_between):
     """
@@ -33,8 +35,9 @@ def a_star_algorithm(initial_state, goal_check, find_neighbors, heuristic, cost_
     g_cost = {initial_state: 0}
 
     # Create the start node. Cost from start to start is 0.
-    start_node = Node(cost=0, heuristic_cost=heuristic(initial_state), total_cost=heuristic(initial_state), state=initial_state, parent=None)
-    
+    start_node = Node(cost=0, heuristic_cost=heuristic(
+        initial_state), total_cost=heuristic(initial_state), state=initial_state, parent=None)
+
     # Push the start node onto the priority queue.
     heapq.heappush(open_set, start_node)
 
@@ -50,7 +53,8 @@ def a_star_algorithm(initial_state, goal_check, find_neighbors, heuristic, cost_
         # For each neighbor of the current node's state:
         for neighbor_state in find_neighbors(current_node.state):
             # Calculate the cost to get to this neighbor.
-            tentative_g_cost = current_node.cost + cost_between(current_node.state, neighbor_state)
+            tentative_g_cost = current_node.cost + \
+                cost_between(current_node.state, neighbor_state)
 
             # If we have not encountered the state yet, or we found a cheaper path to it:
             if neighbor_state not in g_cost or tentative_g_cost < g_cost[neighbor_state]:
@@ -72,6 +76,7 @@ def a_star_algorithm(initial_state, goal_check, find_neighbors, heuristic, cost_
     # If we've checked all nodes and not found the goal, return None.
     return None, float('inf')
 
+
 def reconstruct_path(node):
     """
     Reconstruct the path from the start state to the given node.
@@ -88,4 +93,3 @@ def reconstruct_path(node):
         node = node.parent
     path.append(node.state)  # The initial state.
     return path[::-1]  # Reversed path from start to goal.
-

@@ -1,6 +1,17 @@
 import random
 
-def create_sudoku_puzzle(N, K):
+
+def create_sudoku_puzzle(N: int, K: int):
+    """
+    Generates a sudoku puzzle
+
+    Arguments:
+    N -- Size of the sudoku grid
+    K -- Amount of missing numbers
+    Returns:
+    A grid of integers of NxN, with K elements missing. The Mising values are marked by "_" character
+    """
+
     def is_valid_move(grid, row, col, num):
         # Check row and column
         for i in range(N):
@@ -38,11 +49,12 @@ def create_sudoku_puzzle(N, K):
 
     return grid
 
+
 def print_sudoku(grid):
     for row in grid:
         print(" ".join(map(lambda x: str(x) if x != -1 else ' ', row)))
 
 
-def print_sudoku(grid):
+def print_sudoku(grid: list[list[int]]):
     for row in grid:
         print(" ".join(map(str, row)))
