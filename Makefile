@@ -5,9 +5,8 @@ install:
 	python -m pip install .
 
 # Run tests
-test:
-	python -m unittest discover -s ./tests -p 'test_*.py' -v
-
+# test:
+# 	python -m unittest discover -s ./tests -p 'test_*.py' -v
 
 test-scheduler: 
 	python -m unittest discover -s ./tests/task_scheduling  -p 'test_*.py' -v

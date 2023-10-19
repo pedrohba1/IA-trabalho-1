@@ -1,60 +1,64 @@
 import random
 
+# Assuming the 'is_valid_move' function checks whether it's valid to place a number in a certain position.
+from .is_valid_move import is_valid_move 
 
 def create_sudoku_puzzle(N: int, K: int):
     """
-    Generates a sudoku puzzle
+    Generates a sudoku puzzle.
 
     Arguments:
-    N -- Size of the sudoku grid
-    K -- Amount of missing numbers
+    N -- Size of the sudoku grid (N x N).
+    K -- Number of cells to leave empty in the generated puzzle.
+
     Returns:
-    A grid of integers of NxN, with K elements missing. The Mising values are marked by "_" character
+    A grid of integers of NxN, with K elements missing. The missing values are marked by -1.
     """
-
-    def is_valid_move(grid, row, col, num):
-        # Check row and column
-        for i in range(N):
-            if grid[row][i] == num or grid[i][col] == num:
-                return False
-        return True
-
+    
     def generate_sudoku_solution(grid):
+        """
+        A recursive function that tries to fill the grid with numbers to form a valid solution.
+        """
         for row in range(N):
             for col in range(N):
                 if grid[row][col] == -1:
                     nums = list(range(1, N + 1))
-                    random.shuffle(nums)
+                    random.shuffle(nums)  # Randomize the numbers before placing them
                     for num in nums:
                         if is_valid_move(grid, row, col, num):
                             grid[row][col] = num
-                            if generate_sudoku_solution(grid):
+                            if generate_sudoku_solution(grid):  # Recursively continue to fill up the grid
                                 return True
-                            grid[row][col] = -1
-                    return False
-        return True
+                            grid[row][col] = -1  # Backtrack if no number leads to a solution
+                    return False  # Return False if no numbers can be placed in this cell
+        return True  # A solution is found if we've filled up the grid successfully
 
-    # Create an empty Sudoku grid with -1 indicating blank spaces
+    # Create an empty Sudoku grid with -1 indicating blank spaces.
     grid = [[-1 for _ in range(N)] for _ in range(N)]
 
-    # Generate a complete Sudoku solution
-    generate_sudoku_solution(grid)
+    # Generate a complete Sudoku solution randomly.
+    if not generate_sudoku_solution(grid):
+        raise ValueError("Solution couldn't be generated. Please try again.")  # In case the solution isn't found
 
-    # Randomly remove K numbers to create the puzzle
+    # Randomly remove K numbers to create the puzzle, ensuring we don't remove more numbers than there are cells.
+    K = min(K, N*N)  # Ensure we don't try to remove more cells than exist
     cells = [(i, j) for i in range(N) for j in range(N)]
-    random.shuffle(cells)
+    random.shuffle(cells)  # Randomize the cells we'll be emptying
     for i in range(K):
         row, col = cells[i]
-        grid[row][col] = '_'
+        grid[row][col] = -1  # Remove the number by setting the cell to -1
 
-    return grid
-
-
-def print_sudoku(grid):
-    for row in grid:
-        print(" ".join(map(lambda x: str(x) if x != -1 else ' ', row)))
+    return grid  # Return the generated puzzle
 
 
 def print_sudoku(grid: list[list[int]]):
+    """
+    Prints the sudoku grid in a readable format, replacing -1 with '_'.
+
+    Arguments:
+    grid -- a 2D list of integers representing the Sudoku puzzle.
+    """
+    print("\n current sudoku:  \n")
     for row in grid:
-        print(" ".join(map(str, row)))
+        formatted_row = ['_' if x == -1 else str(x) for x in row]  # Replace -1 with underscores for visibility
+        print(' '.join(formatted_row))  # Print the formatted row
