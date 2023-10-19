@@ -1,36 +1,39 @@
-name: Python Application Test
+name: CI
 
-on:
-  push:
-    branches: [ master, main ]
-  pull_request:
-    branches: [ master, main ]
+on: [push]
 
 jobs:
   build:
-    
+
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-
+      
+    # Step to set up Python
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.11' # Use the latest 3.x version
+        python-version: '3.x' # You can specify a specific version
 
+    # If your project depends on Graphviz, install Graphviz and its development libraries
+    - name: Install Graphviz
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y graphviz libgraphviz-dev
+
+    # Install Python dependencies
     - name: Install dependencies
       run: |
+        python -m pip install --upgrade pip
+        # If you have requirements.txt file
+        # pip install -r requirements.txt
+        # Or you can run make install if you prefer
         make install
 
-    - name: Run tests on scheduler
+    # Execute your other steps e.g., run tests
+    - name: Run Tests
       run: |
-        make test-scheduler
+        make test
 
-    - name: Run tests on sudoku
-      run: |
-        make test-sudoku
-
-    - name: Clean project directory
-      run: |
-        make clean
+    # Other build steps...
