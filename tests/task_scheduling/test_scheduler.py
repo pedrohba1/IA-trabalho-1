@@ -5,7 +5,7 @@ import os
 import networkx as nx
 
 
-from task_scheduling import read_graph, initialize_system
+from task_scheduling import read_graph, initialize_system, find_neighbors
 
 
 class test_scheduler(unittest.TestCase):
@@ -20,7 +20,12 @@ class test_scheduler(unittest.TestCase):
         """
         tests for finding neighbors in the task scheduling problem
 
-        the state representation is given in the types
+        It uses the graph in example.dot and the find_neighbors function
+        must return 6 neighbors based on the initial state representation:
+        1.  0 and 1 in P1;
+        2. 0 in P1 and 1 in P2;
+        And that logic repeats for tasks 3 and 7, arranging in total 6 states.
+
         """
 
         # Determine the absolute path of the script running this code
@@ -35,7 +40,10 @@ class test_scheduler(unittest.TestCase):
         initial_state = initialize_system(G,2)
         self.assertEqual(initial_state.end_time, 9)
         self.assertEqual(initial_state.processors[0].tasks[0].execution_time, 9)
-        print(initial_state)
+        next_states = find_neighbors(G, initial_state)
+        for state in next_states:
+            print(state)
+        self.assertEqual(len(next_states), 6)
 
 
         
