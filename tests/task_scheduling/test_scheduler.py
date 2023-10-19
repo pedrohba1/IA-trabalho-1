@@ -33,6 +33,8 @@ class test_scheduler(unittest.TestCase):
         
        
         initial_state = initialize_system(G,2)
+        self.assertEqual(initial_state.end_time, 9)
+        self.assertEqual(initial_state.processors[0].tasks[0].execution_time, 9)
         print(initial_state)
 
 
