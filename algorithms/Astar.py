@@ -19,7 +19,9 @@ HeuristicFunc = Callable[[nx.DiGraph, GenericState], float]
 CostFunc = Callable[[nx.DiGraph, GenericState], float]
 
 
-def Astar(initial_state: GenericState,
+def Astar(
+        searchSpace: GenericState,
+        initial_state: GenericState,
           goal_check: GoalCheckFunc,
           find_neighbors: FindNeighborsFunc,
           heuristic: HeuristicFunc,
@@ -75,7 +77,7 @@ def Astar(initial_state: GenericState,
     # Dictionary to keep track of actual costs from start node to current
     g_cost_map = {start_node: 0}
     # Estimated total cost from start to goal through the current node
-    f_cost_map = {start_node: heuristic(initial_state)}
+    f_cost_map = {start_node: heuristic(searchSpace, initial_state)}
 
     visited_nodes = set()  # Set to keep track of visited nodes (closed set in A* terminology)
     # For path reconstruction: to keep track of the parent of each node.
@@ -93,12 +95,12 @@ def Astar(initial_state: GenericState,
         current_state = G.nodes[current_node]['state']
 
         # Goal check
-        if goal_check(G, current_state):
+        if goal_check(searchSpace, current_state):
             return reconstruct_path(came_from, current_node, G)
 
         visited_nodes.add(current_node)  # Mark the node as visited
 
-        neighbors = find_neighbors(G, current_state)
+        neighbors = find_neighbors(searchSpace, current_state)
         for neighbor in neighbors:
             # add neighbors to the graph first
             node_counter += 1
@@ -115,7 +117,7 @@ def Astar(initial_state: GenericState,
             if node_counter not in g_cost_map or child_g_cost < g_cost_map[node_counter]:
                 # This path to neighbor is better than any previous one. Record it
                 g_cost_map[node_counter] = child_g_cost
-                f_cost_map[node_counter] = child_g_cost + heuristic(neighbor)
+                f_cost_map[node_counter] = child_g_cost + heuristic(searchSpace,neighbor)
 
                 # Add the neighbor to the open set if not already present
                 heapq.heappush(

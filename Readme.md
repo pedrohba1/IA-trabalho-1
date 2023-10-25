@@ -15,7 +15,7 @@ Sudoku, a popular logic-based number-placement puzzle, requires a player to popu
 
 ### Task Scheduling
 
-Task scheduling involves the allocation of tasks to resources over given time periods, often with various constraints and objectives. Efficient task scheduling is crucial in numerous fields to enhance productivity and resource management. We address this problem with the same AI strategies as the sudoku problem, even using the same agnostic algorithm but redefining some functions.
+Task scheduling involves the allocation of tasks to resources over given time periods, often with various constraints and objectives. Efficient task scheduling is crucial in numerous fields to enhance productivity and resource management. We address this problem with the same AI strategies as the sudoku problem, even using the same agnostic algorithm but redefining some functions passed as arguments to each algorithm function.
 
 ## Getting Started
 

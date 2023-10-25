@@ -57,6 +57,7 @@ class test_sudoku(unittest.TestCase):
         """
         sudoku = create_sudoku_puzzle(4, 8)
         solution = Astar(
+            nx.DiGraph(),
             initial_state=sudoku,
             cost_between=cost_between,
             find_neighbors=find_neighbors,
@@ -75,6 +76,7 @@ class test_sudoku(unittest.TestCase):
         """
         sudoku = create_sudoku_puzzle(4, 8)
         solution = least_cost_path(
+            searchSpace=nx.DiGraph(),
             initial_state=sudoku,
             cost_between=cost_between,
             find_neighbors=find_neighbors,

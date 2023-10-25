@@ -19,7 +19,9 @@ HeuristicFunc = Callable[[nx.DiGraph, GenericState], float]
 CostFunc = Callable[[nx.DiGraph, GenericState], float]
 
 
-def least_cost_path(initial_state: GenericState,
+def least_cost_path(
+                    searchSpace: GenericState,
+                    initial_state: GenericState,
                     goal_check: GoalCheckFunc,
                     find_neighbors: FindNeighborsFunc,
                     cost_between: CostFunc) -> list:
@@ -78,12 +80,12 @@ def least_cost_path(initial_state: GenericState,
 
         current_state = G.nodes[current_node]['state']
 
-        if goal_check(G, current_state):
+        if goal_check(searchSpace, current_state):
             return reconstruct_path(came_from, current_node, G)
 
         visited_nodes.add(current_node)
 
-        neighbors = find_neighbors(G, current_state)
+        neighbors = find_neighbors(searchSpace, current_state)
         for neighbor in neighbors:
             node_counter += 1
             came_from[node_counter] = current_node
