@@ -8,7 +8,7 @@ This repository explores the application of various artificial intelligence algo
 
 Sudoku, a popular logic-based number-placement puzzle, requires a player to populate a 9x9 grid in a manner where each column, each row, and each of the nine 3x3 subgrids contain all digits from 1 to 9. Solving Sudoku puzzles can often be complex and requires logical deduction. In this project, we tackle this challenge using several AI algorithms:
 
-- **A***: Searches the path with the lowest expected total cost.
+- **A***: Searches the path with the lowest expected total cost, using a heuristic
 - **Hill Climbing**: An optimization technique taking steps iteratively to find the peak solution based on the current neighboring states.
 - **Iterative Depth Search**: Explores the deepest level of decision tree first, expanding breadth as needed.
 - **Least Cost Search**: Explores paths with the lowest cost first.

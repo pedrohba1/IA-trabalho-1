@@ -15,7 +15,6 @@ test-sudoku:
 	
 
 
-
 # Clean the project directory (optional)
 clean:
 	find . -type f -name '*.pyc' -delete

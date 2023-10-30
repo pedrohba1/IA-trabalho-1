@@ -62,7 +62,7 @@ class test_scheduler(unittest.TestCase):
         Whewn all the tasks are scheduled, we have a goal state. 
         """
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        dot_file_path = os.path.join(script_dir, f"example2")
+        dot_file_path = os.path.join(script_dir, f"simple_example")
         G = read_graph(dot_file_path)
 
         # Defining the tasks
@@ -84,7 +84,7 @@ class test_scheduler(unittest.TestCase):
         Tests the heuristic against the simpler scheduling graph
         """
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        dot_file_path = os.path.join(script_dir, f"example2")
+        dot_file_path = os.path.join(script_dir, f"simple_example")
         G = read_graph(dot_file_path)
         initial_state = initialize_system(G, 2)
 
@@ -100,7 +100,7 @@ class test_scheduler(unittest.TestCase):
 
         # Construct the full path to the .dot file
         # Ensure 'filename' does not contain the '.dot' extension already
-        dot_file_path = os.path.join(script_dir, f"example2")
+        dot_file_path = os.path.join(script_dir, f"simple_example")
         G = read_graph(dot_file_path)
         initial_state = initialize_system(self.G, 2)
 
@@ -122,7 +122,7 @@ class test_scheduler(unittest.TestCase):
 
         # Construct the full path to the .dot file
         # Ensure 'filename' does not contain the '.dot' extension already
-        dot_file_path = os.path.join(script_dir, f"example2")
+        dot_file_path = os.path.join(script_dir, f"simple_example")
         G = read_graph(dot_file_path)
         initial_state = initialize_system(self.G, 2)
 
