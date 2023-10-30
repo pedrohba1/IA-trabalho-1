@@ -19,6 +19,7 @@ CostFunc = Callable[[nx.DiGraph, GenericState], float]
 
 
 def iter_depth(
+          searchSpace: GenericState,
           initial_state: GenericState,
           goal_check: GoalCheckFunc,
           find_neighbors: FindNeighborsFunc,
@@ -84,12 +85,12 @@ def iter_depth(
         current_state = G.nodes[current_node]['state']
 
         # Goal check
-        if goal_check(G, current_state):
+        if goal_check(searchSpace, current_state):
             return reconstruct_path(came_from, current_node, G)
 
         visited_nodes.add(current_node)  # Mark the node as visited
 
-        neighbors = find_neighbors(G, current_state)
+        neighbors = find_neighbors(searchSpace, current_state)
         for neighbor in neighbors:
             # add neighbors to the graph first
             node_counter += 1

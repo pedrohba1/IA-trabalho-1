@@ -105,6 +105,7 @@ class test_sudoku(unittest.TestCase):
          """
         sudoku = create_sudoku_puzzle(4, 8)
         solution = iter_depth(
+            searchSpace=nx.DiGraph(),
             initial_state=sudoku,
             cost_between=cost_between,
             find_neighbors=find_neighbors,
