@@ -53,29 +53,56 @@ class SystemState:
     def plot_gantt_chart(self):
         """Generate and display a Gantt chart for the current system state."""
 
+
+        # creates a dict of all tasks, to make it easier to serach for dependencies
+        tasks_dict = {}
+        task_to_processor = {}
+        for p_id, processor in enumerate(self.processors):
+            for task in processor.tasks:
+                task_to_processor[task.node_id] = p_id
+                tasks_dict[task.node_id] = task
+
+        
+
         df = []
         colors = {
             'Execution': 'rgb(0, 255, 100)',
             'Communication': 'rgb(220, 0, 0)'
         }
 
-        for processor_id, processor in enumerate(self.processors):
+        task_finish_time = {}
+        for _, processor in enumerate(self.processors):
             start_time = 0
             for task in processor.tasks:
+
+                if task.dependencies:
+                    for dep in task.dependencies:
+                        # checks if dependencies are from the same processor
+                        
+                        # checks if dependencies are not from the same processor
+                        if (task_to_processor[dep] != task_to_processor[task.node_id]):
+                            # Create a Gantt chart entry for the task's communication time (if any)
+
+                            # start time is incremented by  end of dependency time
+                            start_time +=  task_finish_time[dep]
+                            if task.communication_time:
+                                df.append(dict(Task=f"task-{task.node_id}",
+                                            Start=start_time,
+                                            Finish=start_time + task.communication_time,
+                                            Resource='Communication'))
+                            start_time += task.communication_time
+
+              
+
                 # Create a Gantt chart entry for the task's execution time
                 df.append(dict(Task=f"task-{task.node_id}",
                                Start=(start_time),
                                Finish=start_time + task.execution_time,
                                Resource='Execution'))
+                task_finish_time[task.node_id] = start_time + task.execution_time 
                 start_time += task.execution_time
 
-                # Create a Gantt chart entry for the task's communication time (if any)
-                if task.communication_time:
-                    df.append(dict(Task=f"task-{task.node_id}",
-                                   Start=start_time,
-                                   Finish=start_time + task.communication_time,
-                                   Resource='Communication'))
-                    start_time += task.communication_time
+            
 
         fig = ff.create_gantt(
             df, colors=colors, index_col='Resource', show_colorbar=True, group_tasks=True)
