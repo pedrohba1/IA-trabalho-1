@@ -1,3 +1,5 @@
 matplotlib==3.8.0
 pygraphviz==1.11
 networkx==3.1
+plotly==5.18.0
+nbformat>=4.2.0
