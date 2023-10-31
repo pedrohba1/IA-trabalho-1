@@ -113,7 +113,10 @@ class test_sudoku(unittest.TestCase):
         )
         print("\n initial state: \n ")
         print_sudoku(solution[1])
-
+        print('\n\n')
+        print_sudoku(solution[2])
+        print('\n\n')
+        print_sudoku(solution[3])
         print("\n final state \n")
         print_sudoku(solution[-1])
     #     solution = deep_iterative_search(self.sudoku)  # Replace with your actual Deep Iterative Search function
