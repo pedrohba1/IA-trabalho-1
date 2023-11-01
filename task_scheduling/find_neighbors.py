@@ -21,8 +21,10 @@ def find_neighbors(G: nx.DiGraph, current_state: SystemState) -> list[SystemStat
 
     # Step 1: Identify scheduled tasks
     completed_tasks = set()
-    for processor in current_state.processors:
+    task_to_processor = {}
+    for idx, processor in enumerate(current_state.processors):
         for task in processor.tasks:
+            task_to_processor[task.node_id] = idx
             completed_tasks.add(task.node_id)
 
     # Identify tasks ready for execution (all predecessors are completed)
@@ -39,14 +41,24 @@ def find_neighbors(G: nx.DiGraph, current_state: SystemState) -> list[SystemStat
         task_to_schedule = Task(
             node_id=ready_task, execution_time=execution_time)
 
-        # Option 1: Add the task to an existing processor's task list
+        # Add the task to an existing processor's task list
         for idx, processor in enumerate(current_state.processors):
+            task_to_schedule.communication_time = 0
+            # before adding a task to a processor, we need to check
+            # if the task_to_schedule has any dependencies that ran 
+            # on different processors.
+            # If so, increment the communication_time for each
+            # dependency in the graph
+            
+            
             new_tasks = processor.tasks + [task_to_schedule]
-            new_total_time = processor.total_time + execution_time
             new_processor = ProcessorState(
-                tasks=new_tasks, total_time=new_total_time)
+                tasks=new_tasks)
             new_processors = current_state.processors[:idx] + [
                 new_processor] + current_state.processors[idx+1:]
             next_states.append(SystemState(processors=new_processors))
 
     return next_states
+
+
+

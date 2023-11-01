@@ -36,6 +36,7 @@ class SystemState:
         for i, processor in enumerate(self.processors):
             state_str += f"  Processor {i}, total time: {processor.total_time} (with communication time: {processor.total_communication_time}):\n"
             if not processor.tasks:
+                state_str += f"    - Processor is free of tasks -\n"
                 continue
             # Add the details of each task in the processor's task list
             for task in processor.tasks:
