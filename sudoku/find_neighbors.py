@@ -1,11 +1,12 @@
 
 from .is_valid_move import is_valid_move
+from typing import Any
 import networkx as nx
 from .sudoku_types import Sudoku
 
 
 
-def find_neighbors(G: nx.DiGraph, state: Sudoku) -> list[Sudoku] :
+def find_neighbors(state: Sudoku, G: Any = None) -> list[Sudoku] :
     """
     Generate all valid successor states from the current state.
 '   The successors are simply the valid values for the first position of 

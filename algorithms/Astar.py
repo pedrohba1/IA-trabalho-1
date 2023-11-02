@@ -20,12 +20,12 @@ CostFunc = Callable[[nx.DiGraph, GenericState], float]
 
 
 def Astar(
-        searchSpace: GenericState,
-        initial_state: GenericState,
-          goal_check: GoalCheckFunc,
-          find_neighbors: FindNeighborsFunc,
-          heuristic: HeuristicFunc,
-          cost_between: CostFunc) -> Tuple[Optional[List], nx.DiGraph]:
+    searchSpace: GenericState,
+    initial_state: GenericState,
+        goal_check: GoalCheckFunc,
+        find_neighbors: FindNeighborsFunc,
+        heuristic: HeuristicFunc,
+        cost_between: CostFunc) -> Tuple[Optional[List], nx.DiGraph]:
     """
     Implements the A* search algorithm for pathfinding in a graph. The function is a general-purpose pathfinding 
     algorithm designed to operate on any graph-like structure. This specific implementation requires the graph 
@@ -77,9 +77,8 @@ def Astar(
     # Dictionary to keep track of actual costs from start node to current
     g_cost_map = {start_node: 0}
     # Estimated total cost from start to goal through the current node
-    f_cost_map = {start_node: heuristic(searchSpace, initial_state)}
+    f_cost_map = {start_node: heuristic(initial_state, searchSpace)}
 
-    visited_nodes = set()  # Set to keep track of visited nodes (closed set in A* terminology)
     # For path reconstruction: to keep track of the parent of each node.
     came_from = {}
 
@@ -95,22 +94,23 @@ def Astar(
         current_state = G.nodes[current_node]['state']
 
         # Goal check
-        if goal_check(searchSpace, current_state):
+        if goal_check(current_state, searchSpace):
             return (reconstruct_path(came_from, current_node, G), G)
 
         # mark node as visited
         G.nodes[current_node]['visited'] = True
 
-        neighbors = find_neighbors(searchSpace, current_state)
+        neighbors = find_neighbors(current_state, searchSpace)
         for neighbor in neighbors:
             # add neighbors to the graph first
             node_counter += 1
             # New path is better, update the parent
             came_from[node_counter] = current_node
             G.add_node(node_counter, state=neighbor, visited=False)
-            G.add_edge(current_node, node_counter, weight=cost_between(G,
-                                                                       G.nodes[current_node]['state'], 
-                                                                       G.nodes[node_counter]['state']))
+            G.add_edge(current_node, node_counter, weight=cost_between(
+                G.nodes[current_node]['state'],
+                G.nodes[node_counter]['state'], G)
+            )
 
             child_g_cost = g_cost_map[current_node] + \
                 G[current_node][node_counter]['weight']
@@ -118,7 +118,8 @@ def Astar(
             if node_counter not in g_cost_map or child_g_cost < g_cost_map[node_counter]:
                 # This path to neighbor is better than any previous one. Record it
                 g_cost_map[node_counter] = child_g_cost
-                f_cost_map[node_counter] = child_g_cost + heuristic(searchSpace,neighbor)
+                f_cost_map[node_counter] = child_g_cost + \
+                    heuristic(neighbor, searchSpace)
 
                 # Add the neighbor to the open set if not already present
                 heapq.heappush(

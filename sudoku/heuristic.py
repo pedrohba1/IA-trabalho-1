@@ -1,4 +1,7 @@
-def heuristic(searchSpace: any,  state: list[list[int]]) -> float:
+from typing import Any
+
+
+def heuristic(state: list[list[int]], searchSpace: Any = None) -> float:
     """
     Heuristic function that estimates the cost to reach the goal from the current state.
 

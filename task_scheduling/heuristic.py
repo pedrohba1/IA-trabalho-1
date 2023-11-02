@@ -3,7 +3,7 @@ from .system_types import SystemState
 import networkx as nx
 
 
-def heuristic(searchSpace: nx.DiGraph, state: SystemState) -> float:
+def heuristic(state: SystemState, searchSpace: nx.DiGraph) -> float:
     """
     Calculates the heuristic value for a given SystemState based on the most resources required.
 

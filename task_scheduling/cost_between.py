@@ -2,7 +2,7 @@ import networkx as nx
 from .system_types import SystemState
 
 
-def cost_between(G: nx.DiGraph, state1: SystemState, state2: SystemState) -> float:
+def cost_between(state1: SystemState, state2: SystemState, G: nx.DiGraph) -> float:
     """_summary_
 
     Args:
