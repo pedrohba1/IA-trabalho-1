@@ -65,19 +65,21 @@ class test_scheduler(unittest.TestCase):
         dot_file_path = os.path.join(script_dir, f"simple_example")
         G = read_graph(dot_file_path)
 
-        # Defining the tasks
-        task_0 = Task(node_id=0, execution_time=1)
-        task_1 = Task(node_id=1, execution_time=2)
-        task_2 = Task(node_id=2, execution_time=4)
-        task_3 = Task(node_id=3, execution_time=2)
 
-        # Assigning tasks to processors
-        processor_A = ProcessorState(tasks=[task_0, task_1], total_time=1 + 2)
-        processor_B = ProcessorState(tasks=[task_2, task_3], total_time=4 + 2)
+        tasks_p1 = [
+        Task(node_id=0, execution_time=1, communication_time=0),
+        Task(node_id=1, execution_time=2, communication_time=0, dependencies=[0]),
+        Task(node_id=2, execution_time=4, communication_time=0, dependencies=[0]),
+        ]
+        tasks_p2 = [
+        Task(node_id=3, execution_time=2, communication_time=1, dependencies=[1]),
+        ]
 
-        # Creating the SystemState
-        solution_state = SystemState(processors=[processor_A, processor_B])
-        self.assertTrue(goal_check(G, solution_state))
+        processor1 = ProcessorState(tasks_p1)
+        processor2 = ProcessorState(tasks_p2)
+
+        system = SystemState([processor1, processor2])
+        self.assertTrue(goal_check(G, system))
     
     def test_heuristic(self):
         """

@@ -11,13 +11,27 @@ class Task:
             self.dependencies = []
         else:
             self.dependencies = dependencies
+    
+    def __str__(self) -> str:
+        state_str = "\n"
+        state_str += f"   - node id: {self.node_id}\n"
+        state_str += f"    - Execution time: {self.execution_time}\n"
+        state_str += f"    - Communication time: {self.communication_time}\n"
+        state_str += f"   - Dependencies: {self.dependencies}\n"
+        return state_str
 
 class ProcessorState:
     def __init__(self, tasks: List[Task] = None):
         if tasks is None:
             tasks = []
         self.tasks = tasks
-        self.total_time = sum(task.execution_time for task in tasks)
+        self.total_time = sum(task.execution_time + task.communication_time for task in tasks)
+
+    @property
+    def total_execution_time(self) -> int:
+        """The total execution time required for all tasks in this ProcessorState."""
+        return sum(task.execution_time for task in self.tasks)
+
 
     @property
     def total_communication_time(self) -> int:
