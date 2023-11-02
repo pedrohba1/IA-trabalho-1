@@ -5,7 +5,7 @@ import os
 import networkx as nx
 
 from sudoku import create_sudoku_puzzle, print_sudoku, goal_check, find_neighbors, heuristic, cost_between
-from algorithms import Astar, least_cost_path, iter_depth, hill_climbing
+from algorithms import Astar, least_cost_path, iter_depth_search, hill_climbing
 
 
 class test_sudoku(unittest.TestCase):
@@ -77,7 +77,7 @@ class test_sudoku(unittest.TestCase):
         """
         sudoku = create_sudoku_puzzle(4, 8)
         solution = least_cost_path(
-            searchSpace=nx.DiGraph(),
+            search_space=nx.DiGraph(),
             initial_state=sudoku,
             cost_between=cost_between,
             find_neighbors=find_neighbors,
@@ -108,15 +108,14 @@ class test_sudoku(unittest.TestCase):
 
     def test_deep_iterative_search(self):
      """
-      Test case to assess the Deep Iterative Search algorithm's effectiveness.
-      This method involves applying Deep Iterative Search to the puzzle and verifying the solution's accuracy.
+      Tests the Deep iterative search algorithm 
      """
-     sudoku = create_sudoku_puzzle(4, 8)
-     solution = iter_depth(
-            searchSpace=nx.DiGraph(),
+     sudoku = self.sudoku_matrix
+     solution, _ = iter_depth_search(
             initial_state=sudoku,
             goal_check=goal_check,
-            find_neighbors=find_neighbors
+            find_neighbors=find_neighbors,
+            max_depth=20
         )
      print("\n initial state: \n ")
      print_sudoku(solution[0])
@@ -126,6 +125,7 @@ class test_sudoku(unittest.TestCase):
          print('\n')
      print("\n final state \n")
      print_sudoku(solution[-1])
+     self.assertTrue(goal_check(solution[-1]))
 
 if __name__ == '__main__':
     unittest.main()

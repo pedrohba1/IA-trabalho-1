@@ -20,21 +20,26 @@ CostFunc = Callable[[nx.DiGraph, GenericState], float]
 
 
 def least_cost_path(
-        searchSpace: GenericState,
         initial_state: GenericState,
         goal_check: GoalCheckFunc,
         find_neighbors: FindNeighborsFunc,
-        cost_between: CostFunc) -> list:
+        cost_between: CostFunc,
+        search_space: GenericState = None
+) -> list:
     """
     Implements the least-cost pathfinding algorithm (Dijkstra's algorithm) for graphs. The function is designed for general-purpose 
     pathfinding and operates on any graph-like structure, provided the graph is represented compatibly with the provided helper functions.
 
     Args:
-        initial_state (any): 
+        search_space (GenericState):
+            A space to get information about the search from. Sometimes might not be necessary, in the case
+            of the sudoku problem. 
+
+        initial_state (GenericState): 
             The starting state of the search. This is typically a representation of a board, puzzle configuration, 
             or another state from which the search begins.
 
-        goal_check (callable): 
+        goal_check (GoalCheckFunc): 
             A function that takes a state and returns a boolean indicating if the goal has been reached. It is used 
             at each step of the algorithm to determine if the search is complete.
 
@@ -83,19 +88,19 @@ def least_cost_path(
 
         current_state = G.nodes[current_node]['state']
 
-        if goal_check(current_state, searchSpace):
+        if goal_check(current_state, search_space):
             return reconstruct_path(came_from, current_node, G)
 
         visited_nodes.add(current_node)
 
-        neighbors = find_neighbors(current_state, searchSpace)
+        neighbors = find_neighbors(current_state, search_space)
         for neighbor in neighbors:
             node_counter += 1
             came_from[node_counter] = current_node
             G.add_node(node_counter, state=neighbor)
             G.add_edge(current_node, node_counter, weight=cost_between(
                 G.nodes[current_node]['state'],
-                G.nodes[node_counter]['state'], 
+                G.nodes[node_counter]['state'],
                 G))
 
             g_cost = g_cost_map[current_node] + \

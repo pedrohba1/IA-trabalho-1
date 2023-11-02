@@ -2,13 +2,14 @@ import networkx as nx
 from .system_types import SystemState
 
 
-def goal_check(system_state: SystemState, G: nx.DiGraph ) -> bool:
+def goal_check(system_state: SystemState, G: nx.DiGraph) -> bool:
     """
     Checks if all tasks are scheduled across the processors.
 
     Args:
         system_state (SystemState): The current state of the system.
-        G (nx.DiGraph): A directed graph that contains all tasks.
+        G (nx.DiGraph): A directed graph that contains all tasks, their execution times
+        and communication times (weights)
 
     Returns:
         bool: True if all tasks are scheduled, false otherwise.

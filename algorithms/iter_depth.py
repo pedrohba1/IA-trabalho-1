@@ -1,99 +1,72 @@
 # Author: Vitor Ramos
 
 import networkx as nx
-import heapq
 
-from .reconstruct_path import reconstruct_path
-
-from typing import Callable, List, Any
+from typing import Callable, List, Any, Tuple
 
 GenericState = Any
-
-GoalCheckFunc = Callable[[GenericState], bool]
-
-FindNeighborsFunc = Callable[[nx.DiGraph, GenericState], List[GenericState]]
-
-HeuristicFunc = Callable[[nx.DiGraph, GenericState], float]
-
-CostFunc = Callable[[nx.DiGraph, GenericState], float]
+GoalCheckFunc = Callable[[GenericState, GenericState], bool]
+FindNeighborsFunc = Callable[[GenericState, GenericState], List[GenericState]]
 
 
-def iter_depth(
-        searchSpace: GenericState,
+def iter_depth_search(
         initial_state: GenericState,
         goal_check: GoalCheckFunc,
-        find_neighbors: FindNeighborsFunc) -> list:
+        find_neighbors: FindNeighborsFunc,
+        max_depth: int,
+        search_space: GenericState = None,
+) -> Tuple[list[GenericState], nx.DiGraph]:
     """
-    Implements the iter depth search algorithm for pathfinding in a graph. The function is a general-purpose pathfinding 
-    algorithm designed to operate on any graph-like structure. This specific implementation requires the graph 
-    to be represented in a way that's compatible with the provided helper functions.
-
+    Implements the iterative depth search first.
     Args:
-        initial_state (any): 
-            The starting state of the search. This is typically a representation of a board, puzzle configuration, 
-            or another state from which the search begins.
+        initial_state (GenericState):
+            The starting state of the search.
 
-        goal_check (callable): 
-            A function that takes a state and returns a boolean indicating if the goal has been reached. It is used 
-            at each step of the algorithm to determine if the search is complete.
+        goal_check (GoalCheckFunc):
+            A function that checks if the current state is the goal state.
 
-        find_neighbors (callable): 
-            A function responsible for expanding (or "generating") the neighbors of the current state. It takes the 
-            current state as an argument and returns a list of possible successor states. These successors are the 
-            states reachable from the current state following the rules defined by the problem domain.
+        find_neighbors (FindNeighborsFunc):
+            A function that generates the neighbors of a given state.
 
+        max_depth (int):
+            a value to limit the depth of the search.
+              
+        search_space (GenericState):
+            The environment or space in which the search is taking place.
+            Usually a graph.
     Returns:
-        list: 
-            It returns the list of the sequence of states chosen in order to find the solution. The state at the
-            end of the list is the final solution. it returns None if it was unable to find a solution
+        List[GenericState]: 
+            A list representing the path from the initial state to the goal state,
+            or an empty list if no path is found.
     """
+    # initialize the solution graph
     G = nx.DiGraph()
 
-    # adds the stat node
+    # Add the start node
     start_node = 1
-    G.add_node(start_node, state=initial_state)
+    G.add_node(start_node, state=initial_state, visited=True)
+
     node_counter = 1
+    def depth_limited_search(current_node: int, depth: int) -> list:
+        nonlocal node_counter  
+        nonlocal G
+        # if it found a goal, return the recursion
+        if depth == 0 and goal_check(G.nodes[current_node]["state"], search_space):
+            return [G.nodes[current_node]["state"]]
+        elif depth > 0:
+            for neighbor in find_neighbors(G.nodes[current_node]["state"], search_space):
+                node_counter +=1 
+                G.add_node(node_counter, state=neighbor, visited=True)
+                G.add_edge(current_node, node_counter, weight=0)
+                path = depth_limited_search(node_counter, depth - 1)
+                if path:
+                    return [G.nodes[current_node]["state"]] + path
+        return []
 
-    # Data setup
-    open_set = []
-    # We push the start node with a priority of 0
-    open_set.append(start_node)
+    for depth in range(max_depth):
+        path = depth_limited_search(start_node, depth)
+        if path:
+            return (path,G)
 
-    visited_nodes = set()  # Set to keep track of visited nodes
-    # For path reconstruction: to keep track of the parent of each node.
-    came_from = {}
-
-    while open_set:
-        # Pop the node with the lowest cost from the priority queue
-        current_node = open_set[0]
-        open_set.remove(current_node)
-
-        # Skip processing if we've already visited this node
-        if current_node in visited_nodes:
-            continue
-
-        # Goal check
-        if  goal_check(G.nodes[current_node]["state"], searchSpace):
-            return reconstruct_path(came_from, current_node, G)
-
-        visited_nodes.add(current_node)  # Mark the node as visited
-
-        neighbors = find_neighbors(G.nodes[current_node]["state"], searchSpace)
-        for neighbor in neighbors:
-            # add neighbors to the graph first
-            node_counter += 1
-            # New path is better, update the parent
-            came_from[node_counter] = current_node
-            G.add_node(node_counter, state=neighbor)
-             # Goal check
-            if  goal_check(G.nodes[current_node]["state"], searchSpace):
-             return reconstruct_path(came_from, current_node, G)
-            
-            # Add the neighbor to the open set if not already present
-            open_set.append(node_counter)
-            
-    
-
-    print("Failed to reach the goal.")
-    # or an empty path, or whatever signals failure appropriately in your application.
-    return None
+    print("goal not found")
+    return (path,G)

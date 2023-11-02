@@ -37,7 +37,7 @@ class test_scheduler(unittest.TestCase):
 
         self.assertEqual(self.initial_state.end_time, 1)
         next_states = find_neighbors(self.initial_state, self.G)
-        self.assertEqual(len(next_states),4)
+        self.assertEqual(len(next_states), 4)
 
     def test_cost_between(self):
         """
@@ -48,7 +48,7 @@ class test_scheduler(unittest.TestCase):
         print("\ninitial state: \n")
         for state in next_states:
             print("cost between: ", cost_between(
-                 self.initial_state, state, self.G))
+                self.initial_state, state, self.G))
 
     def test_goal_check(self):
         """
@@ -56,12 +56,15 @@ class test_scheduler(unittest.TestCase):
         Whewn all the tasks are scheduled, we have a goal state. 
         """
         tasks_p1 = [
-        Task(node_id=0, execution_time=1, communication_time=0),
-        Task(node_id=1, execution_time=2, communication_time=0, dependencies=[0]),
-        Task(node_id=2, execution_time=4, communication_time=0, dependencies=[0]),
+            Task(node_id=0, execution_time=1, communication_time=0),
+            Task(node_id=1, execution_time=2,
+                 communication_time=0, dependencies=[0]),
+            Task(node_id=2, execution_time=4,
+                 communication_time=0, dependencies=[0]),
         ]
         tasks_p2 = [
-        Task(node_id=3, execution_time=2, communication_time=1, dependencies=[1]),
+            Task(node_id=3, execution_time=2,
+                 communication_time=1, dependencies=[1]),
         ]
 
         processor1 = ProcessorState(tasks_p1)
@@ -69,7 +72,7 @@ class test_scheduler(unittest.TestCase):
 
         system = SystemState([processor1, processor2])
         self.assertTrue(goal_check(system, self.G))
-    
+
     def test_heuristic(self):
         """
         Tests the heuristic against the simpler scheduling graph
@@ -77,35 +80,35 @@ class test_scheduler(unittest.TestCase):
         initial_state = initialize_system(self.G, 2)
 
         val = heuristic(initial_state, self.G)
-        self.assertEqual(val,4)
+        self.assertEqual(val, 4)
 
-    # def test_iter_depth(self):
-    #     """
-    #     tests the application of the least cost algorithm
-    #     """
-    #     solution = iter_depth(
-    #                     searchSpace=self.G,
-    #                     initial_state=self.initial_state, 
-    #                     goal_check=goal_check,
-    #                     find_neighbors=find_neighbors, 
-    #                      cost_between=cost_between)
-    #     print("\n initial state: \n ")
-    #     print(solution[0])
+    def test_iter_depth(self):
+        """
+        tests the application of the least cost algorithm
+        """
+        solution, _ = iter_depth.iter_depth_search(
+            search_space=self.G,
+            initial_state=self.initial_state,
+            goal_check=goal_check,
+            max_depth=40,
+            find_neighbors=find_neighbors)
+        print("\n initial state: \n ")
+        print(solution[0])
 
-    #     print("\n final state \n")
-    #     print(solution[-1])
-
+        print("\n final state \n")
+        print(solution[-1])
+        self.assertTrue(goal_check(solution[-1], self.G))
 
     def test_least_cost(self):
         """
         tests the application of the least cost algorithm
         """
         solution = least_cost_path(
-                        searchSpace=self.G,
-                        initial_state=self.initial_state, 
-                        goal_check=goal_check,
-                        find_neighbors=find_neighbors, 
-                         cost_between=cost_between)
+            search_space=self.G,
+            initial_state=self.initial_state,
+            goal_check=goal_check,
+            find_neighbors=find_neighbors,
+            cost_between=cost_between)
         print("\n initial state: \n ")
         print(solution[0])
 
@@ -117,12 +120,12 @@ class test_scheduler(unittest.TestCase):
         initial_state = initialize_system(self.G, 2)
 
         solution = Astar(
-                        searchSpace=self.G,
-                        initial_state=initial_state, 
-                        goal_check=goal_check,
-                        find_neighbors=find_neighbors, 
-                         cost_between=cost_between,
-                         heuristic=heuristic)
+            searchSpace=self.G,
+            initial_state=initial_state,
+            goal_check=goal_check,
+            find_neighbors=find_neighbors,
+            cost_between=cost_between,
+            heuristic=heuristic)
         print("\n initial state: \n ")
         print(solution[0])
 
@@ -134,16 +137,17 @@ class test_scheduler(unittest.TestCase):
         initial_state = initialize_system(self.G, 2)
 
         solution = greedy_search(
-                        searchSpace=self.G,
-                        initial_state=initial_state, 
-                        goal_check=goal_check,
-                        find_neighbors=find_neighbors, 
-                         heuristic=heuristic)
+            searchSpace=self.G,
+            initial_state=initial_state,
+            goal_check=goal_check,
+            find_neighbors=find_neighbors,
+            heuristic=heuristic)
         print("\n initial state: \n ")
         print(solution[0])
 
         print("\n final state \n")
         print(solution[-1])
+
 
 if __name__ == '__main__':
     unittest.main()
