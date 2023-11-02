@@ -20,11 +20,11 @@ CostFunc = Callable[[nx.DiGraph, GenericState], float]
 
 
 def least_cost_path(
-                    searchSpace: GenericState,
-                    initial_state: GenericState,
-                    goal_check: GoalCheckFunc,
-                    find_neighbors: FindNeighborsFunc,
-                    cost_between: CostFunc) -> list:
+        searchSpace: GenericState,
+        initial_state: GenericState,
+        goal_check: GoalCheckFunc,
+        find_neighbors: FindNeighborsFunc,
+        cost_between: CostFunc) -> list:
     """
     Implements the least-cost pathfinding algorithm (Dijkstra's algorithm) for graphs. The function is designed for general-purpose 
     pathfinding and operates on any graph-like structure, provided the graph is represented compatibly with the provided helper functions.
@@ -63,7 +63,7 @@ def least_cost_path(
 
     # Data setup
     open_set = []
-    # We push the start node with a priority of 
+    # We push the start node with a priority of
     heapq.heappush(open_set, (0, start_node))
 
     # it's just the actual costs, no heuristic.
@@ -73,7 +73,7 @@ def least_cost_path(
     came_from = {}  # For path reconstruction
 
     while open_set:
-        #pop the smallest element from the priority queue
+        # pop the smallest element from the priority queue
         # heappop returns a tuple, containing the cost and the node.
         # We are not interested int he cost in this case, so we assign _ to it
         _, current_node = heapq.heappop(open_set)
@@ -83,19 +83,20 @@ def least_cost_path(
 
         current_state = G.nodes[current_node]['state']
 
-        if goal_check(searchSpace, current_state):
+        if goal_check(current_state, searchSpace):
             return reconstruct_path(came_from, current_node, G)
 
         visited_nodes.add(current_node)
 
-        neighbors = find_neighbors(searchSpace, current_state)
+        neighbors = find_neighbors(current_state, searchSpace)
         for neighbor in neighbors:
             node_counter += 1
             came_from[node_counter] = current_node
             G.add_node(node_counter, state=neighbor)
-            G.add_edge(current_node, node_counter, weight=cost_between(G,
-                                                                       G.nodes[current_node]['state'], 
-                                                                       G.nodes[node_counter]['state']))
+            G.add_edge(current_node, node_counter, weight=cost_between(
+                G.nodes[current_node]['state'],
+                G.nodes[node_counter]['state'], 
+                G))
 
             g_cost = g_cost_map[current_node] + \
                 G[current_node][node_counter]['weight']

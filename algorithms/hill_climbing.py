@@ -1,61 +1,101 @@
-# Author: Gustavo Melo  
-import random
-from main import create_sudoku_puzzle, prin
+# Author: Pedro Bufulin
 
-def is_valid_move(grid, row, col, num):
-    # Verifica se é um movimento válido na grade Sudoku
-    for i in range(9):
-        if grid[row][i] == num or grid[i][col] == num:
-            return False
+import networkx as nx
+import heapq
 
-    # Verifica a sub-grade 3x3
-    start_row, start_col = 3 * (row // 3), 3 * (col // 3)
-    for i in range(3):
-        for j in range(3):
-            if grid[start_row + i][start_col + j] == num:
-                return False
+from .reconstruct_path import reconstruct_path
 
-    return True
+from typing import Callable, List, Any, Tuple, Optional
 
-def evaluate_solution(grid):
-    # Avalia a qualidade da solução atual contando os números corretamente posicionados
-    correct_count = 0
-    for row in range(9):
-        for col in range(9):
-            if is_valid_move(grid, row, col, grid[row][col]):
-                correct_count += 1
-    return correct_count
+GenericState = Any
+GoalCheckFunc = Callable[[GenericState], bool]
+FindNeighborsFunc = Callable[[Optional[nx.DiGraph], GenericState], List[GenericState]]
+HeuristicFunc = Callable[[Optional[nx.DiGraph], GenericState], float]
 
-def hill_climbing_sudoku(grid):
-    max_iterations = 1000
-    best_solution = [row[:] for row in grid]  # Cria uma cópia profunda da solução inicial
-    best_score = evaluate_solution(grid)
 
-    for _ in range(max_iterations):
-        # Faz um movimento aleatório na solução atual
-        row, col = random.randint(0, 8), random.randint(0, 8)
-        num = random.randint(1, 9)
+def hill_climbing(       
+        searchSpace: GenericState,
+        initial_state: GenericState,
+        goal_check: GoalCheckFunc,
+        find_neighbors: FindNeighborsFunc,
+        heuristic: HeuristicFunc) -> Tuple[Optional[List], Optional[nx.DiGraph]]:
 
-        if is_valid_move(grid, row, col, num):
-            grid[row][col] = num
+    G = nx.DiGraph()
 
-            # Avalia a nova solução
-            new_score = evaluate_solution(grid)
+    # Add the initial state
+    current_node = 1
+    G.add_node(current_node, state=initial_state, value=heuristic(initial_state, searchSpace), visited=True)
 
-            # Verifica se a nova solução é melhor que a anterior
-            if new_score > best_score:
-                best_solution = [row[:] for row in grid]
-                best_score = new_score
+    # map to recnostruct path 
+    came_from = {}
+    node_counter = 1
 
-    return best_solution
+    while True:
+        # Check if the current state is the goal state
+        if goal_check(G.nodes[current_node]["state"], searchSpace):
+            return (reconstruct_path(came_from, current_node, G), G)
 
-# Cria um Sudoku puzzle
-N = 9
-K = 30
-sudoku_puzzle = create_sudoku_puzzle(N, K)
 
-# Sudoku usando subida de encosta
-solved_sudoku = hill_climbing_sudoku(sudoku_puzzle)
+        # Find the neighbors of the current state
+        neighbors = find_neighbors(G.nodes[current_node]["state"], searchSpace)
+        if not neighbors:
+            # No more neighbors to explore, algorithm has reached a local peak
+            G.nodes[current_node]['is_peak']  = True
+            G.nodes[current_node]['visited']  = True
+            # Find a new unvisited state to continue from (move sideways)
+            current_node = jump_sideways(G)
+            if(current_node == -1): 
+                print("Failed to reach the goal, but gave a path anyway")
+                return (reconstruct_path(came_from, current_node, G), G)
+            continue
 
-# Imprime a solução
-print_sudoku(solved_sudoku)
+        # Evaluate the heuristic of the neighbors
+        neighbor_tuples= []
+        for neighbor in neighbors:
+            node_counter +=1
+            came_from[node_counter] = current_node
+            value = heuristic(neighbor, searchSpace)
+            G.add_node(node_counter, state=neighbor, value=value, is_peak=False, visited=False)
+            neighbor_tuples.append((node_counter, value))
+
+        #  Choose the best neighbor
+        # since the neighbor_tuples are a pair of node and heuristic value, we
+        # pass a lambda function so it finds the max based on the heuristic value.
+        best_neighbor_node, best_neighbor_value = max(neighbor_tuples, key=lambda x: x[1])
+
+
+        # Compare with the current state's value
+        if best_neighbor_value <= G.nodes[current_node]['value']:
+            # No neighbor is better, we've reached a peak
+            G.nodes[current_node]['is_peak']  = True
+            G.nodes[current_node]['visited']  = True
+            current_node = jump_sideways(G)
+            if(current_node == -1): 
+                print("Failed to reach the goal, but gave a path anyway")
+                return (reconstruct_path(came_from, current_node, G), G)
+
+            continue
+        
+
+        # Move to the best neighbor
+        G.nodes[best_neighbor_node]['visited'] = True  # Mark the best neighbor as visited
+        came_from[best_neighbor_node] = current_node  # Set the parent of the best neighbor
+        current_node = best_neighbor_node  # Set the current node to the best neighbor
+
+
+
+def jump_sideways(G: nx.DiGraph) -> int:
+    """
+    Searches for a node that was not visited to jump sideways to that node
+
+    Args:
+        G (nx.DiGraph): the graph generated by searching in the search space of the problem
+
+    Returns:
+        int: returns the index of the node that was not visited if found, or -1 if not found
+    """
+    for idx in list(G.nodes):
+        if (G.nodes[idx]['visited'] == False): return idx
+    return -1
+
+

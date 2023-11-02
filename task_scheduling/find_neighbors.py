@@ -5,7 +5,7 @@ from .system_types import SystemState, ProcessorState, Task
 import networkx as nx
 
 
-def find_neighbors(G: nx.DiGraph, current_state: SystemState) -> list[SystemState]:
+def find_neighbors(current_state: SystemState, G: nx.DiGraph) -> list[SystemState]:
     """ Generate all valid neighbors for the current state
 
     Args:

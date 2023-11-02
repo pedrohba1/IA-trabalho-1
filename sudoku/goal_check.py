@@ -1,6 +1,7 @@
+from typing import Any
 import networkx as nx
 
-def goal_check(G: nx.DiGraph, grid: list[list[int]]) -> bool:
+def goal_check(sudoku: list[list[int]], G: Any = None) -> bool:
     """
     Checks if a given Sudoku grid is solved. (if the sudoku in question does not have subgrids)
 
@@ -12,7 +13,7 @@ def goal_check(G: nx.DiGraph, grid: list[list[int]]) -> bool:
     """
 
 
-    N = len(grid)
+    N = len(sudoku)
 
     # Function to check if a segment (row or column) is valid
     def is_segment_valid(segment):
@@ -32,13 +33,13 @@ def goal_check(G: nx.DiGraph, grid: list[list[int]]) -> bool:
         return len(filtered_segment) == N
 
     # Check each row
-    for row in grid:
+    for row in sudoku:
         if not is_segment_valid(row):
             return False
 
     # Check each column
     for col in range(N):
-        column = [grid[row][col] for row in range(N)]
+        column = [sudoku[row][col] for row in range(N)]
         if not is_segment_valid(column):
             return False
 

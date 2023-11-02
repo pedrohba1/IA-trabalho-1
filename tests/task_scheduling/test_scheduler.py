@@ -36,7 +36,7 @@ class test_scheduler(unittest.TestCase):
         """
 
         self.assertEqual(self.initial_state.end_time, 1)
-        next_states = find_neighbors(self.G, self.initial_state)
+        next_states = find_neighbors(self.initial_state, self.G)
         self.assertEqual(len(next_states),4)
 
     def test_cost_between(self):
@@ -44,11 +44,11 @@ class test_scheduler(unittest.TestCase):
         Tests the cost between states. 
         the initial state is tested against the next states and the costs are calculated
         """
-        next_states = find_neighbors(self.G, self.initial_state)
+        next_states = find_neighbors(self.initial_state, self.G)
         print("\ninitial state: \n")
         for state in next_states:
             print("cost between: ", cost_between(
-                self.G, self.initial_state, state))
+                 self.initial_state, state, self.G))
 
     def test_goal_check(self):
         """
@@ -68,7 +68,7 @@ class test_scheduler(unittest.TestCase):
         processor2 = ProcessorState(tasks_p2)
 
         system = SystemState([processor1, processor2])
-        self.assertTrue(goal_check(self.G, system))
+        self.assertTrue(goal_check(system, self.G))
     
     def test_heuristic(self):
         """
@@ -76,7 +76,7 @@ class test_scheduler(unittest.TestCase):
         """
         initial_state = initialize_system(self.G, 2)
 
-        val = heuristic(self.G,initial_state)
+        val = heuristic(initial_state, self.G)
         self.assertEqual(val,4)
 
     def test_iter_depth(self):
