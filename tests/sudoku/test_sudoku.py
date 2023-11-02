@@ -107,23 +107,25 @@ class test_sudoku(unittest.TestCase):
         self.assertTrue(goal_check(solution_path[-1]))
 
     def test_deep_iterative_search(self):
-        """
-        Test case to assess the Deep Iterative Search algorithm's effectiveness.
-
-        This method involves applying Deep Iterative Search to the puzzle and verifying the solution's accuracy.
-        """
-        sudoku = create_sudoku_puzzle(4, 8)
-        solution = iter_depth(
-        searchSpace=nx.DiGraph(),
+     """
+      Test case to assess the Deep Iterative Search algorithm's effectiveness.
+      This method involves applying Deep Iterative Search to the puzzle and verifying the solution's accuracy.
+     """
+     sudoku = create_sudoku_puzzle(4, 8)
+     solution = iter_depth(
+            searchSpace=nx.DiGraph(),
             initial_state=sudoku,
-            cost_between=cost_between,
-        find_neighbors=find_neighbors,
-        goal_check=goal_check
-    )
-        print("\n initial state: \n ")
-        print_sudoku(solution[0])
-        print("\n final state \n")
-        print_sudoku(solution[-1])
+            goal_check=goal_check,
+            find_neighbors=find_neighbors
+        )
+     print("\n initial state: \n ")
+     print_sudoku(solution[0])
+     for i in solution:
+         print('\n')
+         print_sudoku(i)
+         print('\n')
+     print("\n final state \n")
+     print_sudoku(solution[-1])
 
 if __name__ == '__main__':
     unittest.main()
