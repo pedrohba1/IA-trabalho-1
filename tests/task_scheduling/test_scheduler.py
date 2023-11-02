@@ -6,7 +6,7 @@ import networkx as nx
 
 
 from task_scheduling import read_graph, initialize_system, find_neighbors, SystemState, Task, ProcessorState, goal_check, cost_between, heuristic
-from algorithms import least_cost_path, Astar, greedy_search
+from algorithms import least_cost_path, Astar, greedy_search, iter_depth
 
 
 class test_scheduler(unittest.TestCase):
@@ -78,6 +78,23 @@ class test_scheduler(unittest.TestCase):
 
         val = heuristic(self.G,initial_state)
         self.assertEqual(val,4)
+
+    def test_iter_depth(self):
+        """
+        tests the application of the least cost algorithm
+        """
+        solution = iter_depth(
+                        searchSpace=self.G,
+                        initial_state=self.initial_state, 
+                        goal_check=goal_check,
+                        find_neighbors=find_neighbors, 
+                         cost_between=cost_between)
+        print("\n initial state: \n ")
+        print(solution[0])
+
+        print("\n final state \n")
+        print(solution[-1])
+
 
     def test_least_cost(self):
         """

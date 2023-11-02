@@ -64,7 +64,7 @@ def iter_depth(
     # Data setup
     open_set = []
     # We push the start node with a priority of 0
-    heapq.heappush(open_set, (0, start_node))
+    open_set.append(start_node)
 
     # Dictionary to keep track of actual costs from start node to current
     g_cost_map = {start_node: 0}
@@ -75,7 +75,7 @@ def iter_depth(
 
     while open_set:
         # Pop the node with the lowest cost from the priority queue
-        _, current_node = heapq.heappop(open_set)
+        current_node = open_set.pop()
 
         # Skip processing if we've already visited this node
         if current_node in visited_nodes:
@@ -91,7 +91,7 @@ def iter_depth(
         visited_nodes.add(current_node)  # Mark the node as visited
 
         neighbors = find_neighbors(searchSpace, current_state)
-        for neighbor in neighbors:
+        for neighbor in reversed(neighbors):
             # add neighbors to the graph first
             node_counter += 1
             # New path is better, update the parent
@@ -109,8 +109,7 @@ def iter_depth(
                 g_cost_map[node_counter] = child_g_cost
 
                 # Add the neighbor to the open set if not already present
-                heapq.heappush(
-                    open_set, (child_g_cost, node_counter))
+                open_set.append(node_counter)
 
     print("Failed to reach the goal.")
     # or an empty path, or whatever signals failure appropriately in your application.
