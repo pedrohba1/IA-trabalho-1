@@ -4,8 +4,8 @@ import shutil
 import os
 import networkx as nx
 
-from sudoku import create_sudoku_puzzle, print_sudoku, goal_check, find_neighbors, heuristic, cost_between
-from algorithms import Astar, least_cost_path, iter_depth_search, hill_climbing
+from sudoku import create_sudoku_puzzle, print_sudoku, goal_check, find_neighbors, heuristic, cost_between, calculate_solution_cost
+from algorithms import Astar, least_cost_path, iter_depth_search, hill_climbing, output_gen
 
 
 class test_sudoku(unittest.TestCase):
@@ -111,7 +111,7 @@ class test_sudoku(unittest.TestCase):
       Tests the Deep iterative search algorithm 
      """
      sudoku = self.sudoku_matrix
-     solution, _ = iter_depth_search(
+     solution, sG = iter_depth_search(
             initial_state=sudoku,
             goal_check=goal_check,
             find_neighbors=find_neighbors,
@@ -125,7 +125,9 @@ class test_sudoku(unittest.TestCase):
          print('\n')
      print("\n final state \n")
      print_sudoku(solution[-1])
+     output_gen.generate_output((solution,sG),"test_output_sudoku" ,calculate_solution_cost=calculate_solution_cost)
      self.assertTrue(goal_check(solution[-1]))
+
 
 if __name__ == '__main__':
     unittest.main()

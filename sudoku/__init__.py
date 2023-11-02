@@ -4,3 +4,4 @@ from .find_neighbors import find_neighbors
 from .heuristic import heuristic
 from .cost_between import cost_between
 from .sudoku_types import Sudoku
+from .calculate_solution_cost import *
