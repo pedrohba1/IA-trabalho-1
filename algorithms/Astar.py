@@ -66,7 +66,7 @@ def Astar(
 
     # adds the stat node
     start_node = 1
-    G.add_node(start_node, state=initial_state)
+    G.add_node(start_node, state=initial_state, visited=False)
     node_counter = 1
 
     # Data setup
@@ -88,7 +88,7 @@ def Astar(
         _, current_node = heapq.heappop(open_set)
 
         # Skip processing if we've already visited this node
-        if current_node in visited_nodes:
+        if G.nodes[current_node]['visited']:
             continue
 
         # Extract the actual state associated with the node
@@ -98,7 +98,8 @@ def Astar(
         if goal_check(searchSpace, current_state):
             return reconstruct_path(came_from, current_node, G)
 
-        visited_nodes.add(current_node)  # Mark the node as visited
+        # mark node as visited
+        G.nodes[current_node]['visited'] = True
 
         neighbors = find_neighbors(searchSpace, current_state)
         for neighbor in neighbors:
@@ -106,7 +107,7 @@ def Astar(
             node_counter += 1
             # New path is better, update the parent
             came_from[node_counter] = current_node
-            G.add_node(node_counter, state=neighbor)
+            G.add_node(node_counter, state=neighbor, visited=False)
             G.add_edge(current_node, node_counter, weight=cost_between(G,
                                                                        G.nodes[current_node]['state'], 
                                                                        G.nodes[node_counter]['state']))

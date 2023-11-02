@@ -36,7 +36,7 @@ def greedy_search(
 
     # Adds the start node
     start_node = 1
-    G.add_node(start_node, state=initial_state)
+    G.add_node(start_node, state=initial_state, visited=False)
     node_counter = 1
 
     # Data setup
@@ -45,7 +45,6 @@ def greedy_search(
     heapq.heappush(open_set, (heuristic(
         searchSpace, initial_state), start_node))
 
-    visited_nodes = set()  # Set to keep track of visited nodes
     came_from = {}  # For path reconstruction
 
     while open_set:
@@ -53,7 +52,7 @@ def greedy_search(
         _, current_node = heapq.heappop(open_set)
 
         # Skip processing if we've already visited this node
-        if current_node in visited_nodes:
+        if G.nodes[current_node]['visited']:
             continue
 
         # Extract the actual state associated with the node
@@ -63,19 +62,19 @@ def greedy_search(
         if goal_check(searchSpace, current_state):
             return reconstruct_path(came_from, current_node, G)
 
-        visited_nodes.add(current_node)  # Mark the node as visited
-
+        G.nodes[current_node]['visited'] = True
+        
         neighbors = find_neighbors(searchSpace, current_state)
         for neighbor in neighbors:
             # Add neighbors to the graph first
             node_counter += 1
             came_from[node_counter] = current_node
-            G.add_node(node_counter, state=neighbor)
+            G.add_node(node_counter, state=neighbor, visited=False)
 
             # No need to calculate g_cost since it's not used in greedy search
 
             # Check if neighbor is already visited or in open set
-            if node_counter not in visited_nodes:
+            if  not G.nodes[node_counter]['visited']:
                 # Use heuristic alone for priority
                 h_cost = heuristic(searchSpace, neighbor)
 
