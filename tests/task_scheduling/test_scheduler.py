@@ -80,7 +80,7 @@ class test_scheduler(unittest.TestCase):
         initial_state = initialize_system(self.G, 2)
 
         val = heuristic(self.G,initial_state)
-        self.assertEqual(val,5)
+        self.assertEqual(val,4)
 
 
 

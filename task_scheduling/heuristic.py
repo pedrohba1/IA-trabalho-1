@@ -5,10 +5,12 @@ import networkx as nx
 
 def heuristic(searchSpace: nx.DiGraph, state: SystemState) -> float:
     """
-    Calculates the heuristic value for a given SystemState based on the critical path approach.
+    Calculates the heuristic value for a given SystemState based on the most resources required.
 
-    In the critical path approach, we attempt to estimate the time cost of executing all tasks
-    in a single processor.
+    This approach estimates the time cost by considering the execution time for the
+    most resource-intensive remaining unscheduled tasks. This heuristic is admissible because
+    it does not overestimate the cost, since it assumes perfect parallelization, which is 
+    never worse than the actual scheduling outcome
 
     Args:
         searchSpace (nx.DiGraph): A directed graph that contains all tasks with their execution times
@@ -18,31 +20,21 @@ def heuristic(searchSpace: nx.DiGraph, state: SystemState) -> float:
     Returns:
         float: The heuristic value representing the estimated cost to reach the goal from the current state.
     """
-    
+
     # Get all unscheduled tasks
     scheduled_tasks = set()
     for processor in state.processors:
         for task in processor.tasks:
             scheduled_tasks.add(task.node_id)
-    
+
     unscheduled_tasks = set(searchSpace.nodes()) - scheduled_tasks
-    
+
     # If all tasks are scheduled, the heuristic value is 0
     if not unscheduled_tasks:
         return 0.0
-    
-    # Create a subgraph containing only the unscheduled tasks
-    subgraph = searchSpace.subgraph(unscheduled_tasks).copy()
 
-    # Calculate the longest path in the subgraph, accounting for execution time and communication time
-    critical_path = 0.0
-    for path in nx.all_simple_paths(subgraph, source=min(unscheduled_tasks), target=max(unscheduled_tasks)):
-        time_cost = sum([subgraph.nodes[node]['execution_time'] for node in path])
-        
-        # Add communication time between dependent tasks
-        for i in range(len(path) - 1):
-            time_cost += subgraph[path[i]][path[i+1]].get('weight', 0)
-        
-        critical_path = max(critical_path, time_cost)
+    # Calculate the maximum execution time among the unscheduled tasks
+    most_resources_required = sum([searchSpace.nodes[task]['execution_time']
+                                  for task in unscheduled_tasks]) / len(state.processors)
 
-    return critical_path
+    return most_resources_required

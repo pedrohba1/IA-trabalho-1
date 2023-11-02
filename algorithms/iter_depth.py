@@ -19,11 +19,11 @@ CostFunc = Callable[[nx.DiGraph, GenericState], float]
 
 
 def iter_depth(
-          searchSpace: GenericState,
-          initial_state: GenericState,
-          goal_check: GoalCheckFunc,
-          find_neighbors: FindNeighborsFunc,
-          cost_between: CostFunc) -> list:
+        searchSpace: GenericState,
+        initial_state: GenericState,
+        goal_check: GoalCheckFunc,
+        find_neighbors: FindNeighborsFunc,
+        cost_between: CostFunc) -> list:
     """
     Implements the iter depth search algorithm for pathfinding in a graph. The function is a general-purpose pathfinding 
     algorithm designed to operate on any graph-like structure. This specific implementation requires the graph 
@@ -98,7 +98,7 @@ def iter_depth(
             came_from[node_counter] = current_node
             G.add_node(node_counter, state=neighbor)
             G.add_edge(current_node, node_counter, weight=cost_between(G,
-                                                                       G.nodes[current_node]['state'], 
+                                                                       G.nodes[current_node]['state'],
                                                                        G.nodes[node_counter]['state']))
 
             child_g_cost = g_cost_map[current_node] + \
