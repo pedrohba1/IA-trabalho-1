@@ -1,0 +1,36 @@
+Solução: 
+#0
+
+  Processor 0, total time: 1 (with communication time: 0):
+    - Task ID: 0, Execution Time: 1, Communication Time: 0
+  Processor 1, total time: 0 (with communication time: 0):
+    - Processor is free of tasks -
+System end time: 1
+#1
+
+  Processor 0, total time: 5 (with communication time: 0):
+    - Task ID: 0, Execution Time: 1, Communication Time: 0
+    - Task ID: 2, Execution Time: 4, Communication Time: 0
+  Processor 1, total time: 0 (with communication time: 0):
+    - Processor is free of tasks -
+System end time: 5
+#2
+
+  Processor 0, total time: 7 (with communication time: 0):
+    - Task ID: 0, Execution Time: 1, Communication Time: 0
+    - Task ID: 2, Execution Time: 4, Communication Time: 0
+    - Task ID: 1, Execution Time: 2, Communication Time: 0
+  Processor 1, total time: 0 (with communication time: 0):
+    - Processor is free of tasks -
+System end time: 7
+#3
+
+  Processor 0, total time: 9 (with communication time: 0):
+    - Task ID: 0, Execution Time: 1, Communication Time: 0
+    - Task ID: 2, Execution Time: 4, Communication Time: 0
+    - Task ID: 1, Execution Time: 2, Communication Time: 0
+    - Task ID: 3, Execution Time: 2, Communication Time: 0
+  Processor 1, total time: 0 (with communication time: 0):
+    - Processor is free of tasks -
+System end time: 9
+

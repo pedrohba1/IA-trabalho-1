@@ -6,7 +6,7 @@ import heapq
 
 from .reconstruct_path import reconstruct_path
 
-from typing import Callable, List, Any
+from typing import Callable, List, Any, Tuple, Optional
 
 GenericState = Any
 
@@ -25,7 +25,7 @@ def Astar(
           goal_check: GoalCheckFunc,
           find_neighbors: FindNeighborsFunc,
           heuristic: HeuristicFunc,
-          cost_between: CostFunc) -> list:
+          cost_between: CostFunc) -> Tuple[Optional[List], nx.DiGraph]:
     """
     Implements the A* search algorithm for pathfinding in a graph. The function is a general-purpose pathfinding 
     algorithm designed to operate on any graph-like structure. This specific implementation requires the graph 
@@ -96,7 +96,7 @@ def Astar(
 
         # Goal check
         if goal_check(searchSpace, current_state):
-            return reconstruct_path(came_from, current_node, G)
+            return (reconstruct_path(came_from, current_node, G), G)
 
         # mark node as visited
         G.nodes[current_node]['visited'] = True
@@ -126,4 +126,4 @@ def Astar(
 
     print("Failed to reach the goal.")
     # or an empty path, or whatever signals failure appropriately in your application.
-    return None
+    return (None, None)
