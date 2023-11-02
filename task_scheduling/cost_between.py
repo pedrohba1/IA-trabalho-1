@@ -6,12 +6,12 @@ def cost_between(G: nx.DiGraph, state1: SystemState, state2: SystemState) -> flo
     """_summary_
 
     Args:
-        G (nx.DiGraph): _description_
-        state1 (SystemState): _description_
-        state2 (SystemState): _description_
+        G (nx.DiGraph): the task graph. Won't be used here, but is needed for compatibility with the other function
+        state1 (SystemState): state to compare
+        state2 (SystemState): state to compare
 
     Returns:
-        float: _description_
+        float: the absolute value between the end time of both SystemState.
     """
 
     return abs(state1.end_time - state2.end_time)

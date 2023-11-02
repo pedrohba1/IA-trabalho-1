@@ -16,7 +16,7 @@ class test_scheduler(unittest.TestCase):
 
         # Construct the full path to the .dot file
         # Ensure 'filename' does not contain the '.dot' extension already
-        dot_file_path = os.path.join(script_dir, f"example")
+        dot_file_path = os.path.join(script_dir, f"simple_example")
         self.G = read_graph(dot_file_path)
         self.initial_state = initialize_system(self.G, 2)
 
@@ -35,13 +35,9 @@ class test_scheduler(unittest.TestCase):
 
         """
 
-        self.assertEqual(self.initial_state.end_time, 9)
-        self.assertEqual(
-            self.initial_state.processors[0].tasks[0].execution_time, 9)
+        self.assertEqual(self.initial_state.end_time, 1)
         next_states = find_neighbors(self.G, self.initial_state)
-        for state in next_states:
-            print(state)
-        self.assertEqual(len(next_states), 6)
+        self.assertEqual(len(next_states),4)
 
     def test_cost_between(self):
         """
@@ -50,9 +46,7 @@ class test_scheduler(unittest.TestCase):
         """
         next_states = find_neighbors(self.G, self.initial_state)
         print("\ninitial state: \n")
-        print(self.initial_state)
         for state in next_states:
-            print(state)
             print("cost between: ", cost_between(
                 self.G, self.initial_state, state))
 
@@ -61,9 +55,7 @@ class test_scheduler(unittest.TestCase):
         Tests for checking if the current SystemState is the goal.
         Whewn all the tasks are scheduled, we have a goal state. 
         """
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        dot_file_path = os.path.join(script_dir, f"simple_example")
-        G = read_graph(dot_file_path)
+ 
 
 
         tasks_p1 = [
@@ -79,57 +71,42 @@ class test_scheduler(unittest.TestCase):
         processor2 = ProcessorState(tasks_p2)
 
         system = SystemState([processor1, processor2])
-        self.assertTrue(goal_check(G, system))
+        self.assertTrue(goal_check(self.G, system))
     
     def test_heuristic(self):
         """
         Tests the heuristic against the simpler scheduling graph
         """
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        dot_file_path = os.path.join(script_dir, f"simple_example")
-        G = read_graph(dot_file_path)
-        initial_state = initialize_system(G, 2)
+        initial_state = initialize_system(self.G, 2)
 
-        val = heuristic(G,initial_state)
-        print("val: ", val)
+        val = heuristic(self.G,initial_state)
+        self.assertEqual(val,5)
 
 
 
 
     def test_least_cost(self):
-      # Determine the absolute path of the script running this code
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-
-        # Construct the full path to the .dot file
-        # Ensure 'filename' does not contain the '.dot' extension already
-        dot_file_path = os.path.join(script_dir, f"simple_example")
-        G = read_graph(dot_file_path)
-        initial_state = initialize_system(self.G, 2)
-
+        """
+        tests the application of the least cost algorithm
+        """
         solution = least_cost_path(
-                        searchSpace=G,
-                        initial_state=initial_state, 
+                        searchSpace=self.G,
+                        initial_state=self.initial_state, 
                         goal_check=goal_check,
                         find_neighbors=find_neighbors, 
                          cost_between=cost_between)
         print("\n initial state: \n ")
-        print(solution[1])
+        print(solution[0])
 
         print("\n final state \n")
         print(solution[-1])
 
     def test_Astar(self):
-      # Determine the absolute path of the script running this code
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-
-        # Construct the full path to the .dot file
-        # Ensure 'filename' does not contain the '.dot' extension already
-        dot_file_path = os.path.join(script_dir, f"simple_example")
-        G = read_graph(dot_file_path)
+        """tests the application of the Astar algorithm"""
         initial_state = initialize_system(self.G, 2)
 
         solution = Astar(
-                        searchSpace=G,
+                        searchSpace=self.G,
                         initial_state=initial_state, 
                         goal_check=goal_check,
                         find_neighbors=find_neighbors, 
