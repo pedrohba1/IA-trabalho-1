@@ -6,7 +6,7 @@ import networkx as nx
 
 
 from task_scheduling import read_graph, initialize_system, find_neighbors, SystemState, Task, ProcessorState, goal_check, cost_between, heuristic
-from algorithms import least_cost_path, Astar
+from algorithms import least_cost_path, Astar, greedy_search
 
 
 class test_scheduler(unittest.TestCase):
@@ -55,9 +55,6 @@ class test_scheduler(unittest.TestCase):
         Tests for checking if the current SystemState is the goal.
         Whewn all the tasks are scheduled, we have a goal state. 
         """
- 
-
-
         tasks_p1 = [
         Task(node_id=0, execution_time=1, communication_time=0),
         Task(node_id=1, execution_time=2, communication_time=0, dependencies=[0]),
@@ -81,9 +78,6 @@ class test_scheduler(unittest.TestCase):
 
         val = heuristic(self.G,initial_state)
         self.assertEqual(val,4)
-
-
-
 
     def test_least_cost(self):
         """
@@ -113,7 +107,23 @@ class test_scheduler(unittest.TestCase):
                          cost_between=cost_between,
                          heuristic=heuristic)
         print("\n initial state: \n ")
-        print(solution[1])
+        print(solution[0])
+
+        print("\n final state \n")
+        print(solution[-1])
+
+    def test_greedy(self):
+        """tests the application of the greedy search algorithm"""
+        initial_state = initialize_system(self.G, 2)
+
+        solution = greedy_search(
+                        searchSpace=self.G,
+                        initial_state=initial_state, 
+                        goal_check=goal_check,
+                        find_neighbors=find_neighbors, 
+                         heuristic=heuristic)
+        print("\n initial state: \n ")
+        print(solution[0])
 
         print("\n final state \n")
         print(solution[-1])

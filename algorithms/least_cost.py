@@ -63,7 +63,7 @@ def least_cost_path(
 
     # Data setup
     open_set = []
-    # We push the start node with a priority of 0
+    # We push the start node with a priority of 
     heapq.heappush(open_set, (0, start_node))
 
     # it's just the actual costs, no heuristic.
@@ -73,6 +73,9 @@ def least_cost_path(
     came_from = {}  # For path reconstruction
 
     while open_set:
+        #pop the smallest element from the priority queue
+        # heappop returns a tuple, containing the cost and the node.
+        # We are not interested int he cost in this case, so we assign _ to it
         _, current_node = heapq.heappop(open_set)
 
         if current_node in visited_nodes:
