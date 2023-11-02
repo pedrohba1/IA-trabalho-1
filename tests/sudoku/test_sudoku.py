@@ -125,7 +125,7 @@ class test_sudoku(unittest.TestCase):
          print('\n')
      print("\n final state \n")
      print_sudoku(solution[-1])
-     output_gen.generate_output((solution,sG),"test_output_sudoku" ,calculate_solution_cost=calculate_solution_cost)
+     output_gen.generate_output((solution,sG),filename="test_output_sudoku" ,calculate_solution_cost=calculate_solution_cost)
      self.assertTrue(goal_check(solution[-1]))
 
 
