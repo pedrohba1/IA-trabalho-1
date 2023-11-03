@@ -5,7 +5,7 @@ import networkx as nx
 import heapq
 
 from .reconstruct_path import reconstruct_path
-from typing import Callable, List, Any
+from typing import Callable, List, Any, Tuple
 
 
 GenericState = Any
@@ -25,7 +25,7 @@ def least_cost_path(
         find_neighbors: FindNeighborsFunc,
         cost_between: CostFunc,
         search_space: GenericState = None
-) -> list:
+) -> Tuple[list[GenericState], nx.DiGraph]:
     """
     Implements the least-cost pathfinding algorithm (Dijkstra's algorithm) for graphs. The function is designed for general-purpose 
     pathfinding and operates on any graph-like structure, provided the graph is represented compatibly with the provided helper functions.
@@ -89,7 +89,7 @@ def least_cost_path(
         current_state = G.nodes[current_node]['state']
 
         if goal_check(current_state, search_space):
-            return reconstruct_path(came_from, current_node, G)
+            return (reconstruct_path(came_from, current_node, G), G)
 
         visited_nodes.add(current_node)
 
@@ -112,4 +112,4 @@ def least_cost_path(
                 heapq.heappush(open_set, (g_cost, node_counter))
 
     # If there is no solution, return None or appropriate failure indication.
-    return None
+    return (reconstruct_path(came_from, current_node, G), G)
