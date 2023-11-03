@@ -2,21 +2,24 @@ import networkx as nx
 from .sudoku_types import Sudoku
 
 
-def cost_between(G: nx.DiGraph, state1: Sudoku, state2: Sudoku) -> float:
+def cost_between(state1: Sudoku, state2: Sudoku, G: nx.DiGraph = None) -> int:
     """
-    Calculate the cost of moving from one state to another. 
-
-    In this case, since we only change one number between states, the cost can be 1.
-    This can be explored further to find a better cost function.
+    Calculate the cost of moving from one state to another based on the difference in
+    the number of -1 entries in the Sudoku grid.
 
     Args:
         G (nx.DiGraph): A Digraph representing the search space. It is not used in this 
-        specific scenario of the sudoku but the param is necessary for compatibility
-        state1 (Sudoku): A sudoku representation
-        state2 (Sudoku): Another sudoku representation
+        specific scenario of the sudoku but the param is necessary for compatibility.
+        state1 (Sudoku): A sudoku representation with a grid as a 2D list or array.
+        state2 (Sudoku): Another sudoku representation with a grid as a 2D list or array.
 
     Returns:
-        float: cost value
+        int: The absolute difference in the count of -1's in each Sudoku state.
     """
+    def count_neg_ones(grid):
+        return sum(row.count(-1) for row in grid)
 
-    return 1  # Constant cost for each move in Sudoku
+    count1 = count_neg_ones(state1)
+    count2 = count_neg_ones(state2)
+
+    return abs(count1 - count2)
