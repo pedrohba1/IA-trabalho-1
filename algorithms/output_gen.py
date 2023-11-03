@@ -6,7 +6,8 @@ from typing import Callable, List, Tuple, Optional
 def generate_output(
         result: Tuple[Optional[List], nx.DiGraph],
         calculate_solution_cost: Callable,
-        filename: str = ""
+        filename: str = "",
+        should_print: bool = False
 ) -> None:
 
     path, graph = result
@@ -38,9 +39,11 @@ def generate_output(
     # Print out the information
     if (filename):
         file_path = os.path.abspath(filename)
-        print(f"Caminho da solução escrito  em: {file_path}")
-    print(f"Número de nós visitados: {visited_nodes_count}")
-    print(f"Total de nós: {len(graph.nodes())}")
-    print(f"Profundidade da meta: {goal_depth}")
-    print(f"Custo da solução: {solution_cost}")
+        if should_print:
+            print(f"Caminho da solução escrito  em: {file_path}")
+    if should_print:
+        print(f"Número de nós visitados: {visited_nodes_count}")
+        print(f"Total de nós: {len(graph.nodes())}")
+        print(f"Profundidade da meta: {goal_depth}")
+        print(f"Custo da solução: {solution_cost}")
     return (visited_nodes_count, len(graph.nodes()), goal_depth, solution_cost)
