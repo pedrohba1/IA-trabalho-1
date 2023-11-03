@@ -86,6 +86,7 @@ def least_cost_path(
         if current_node in visited_nodes:
             continue
 
+        G.nodes[current_node]['visited'] = True
         current_state = G.nodes[current_node]['state']
 
         if goal_check(current_state, search_space):

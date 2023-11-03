@@ -14,11 +14,12 @@ HeuristicFunc = Callable[[Optional[nx.DiGraph], GenericState], float]
 
 
 def hill_climbing(       
-        searchSpace: GenericState,
         initial_state: GenericState,
         goal_check: GoalCheckFunc,
         find_neighbors: FindNeighborsFunc,
-        heuristic: HeuristicFunc) -> Tuple[Optional[List], Optional[nx.DiGraph]]:
+        heuristic: HeuristicFunc,
+        searchSpace: GenericState = None,
+        ) -> Tuple[Optional[List], Optional[nx.DiGraph]]:
 
     G = nx.DiGraph()
 

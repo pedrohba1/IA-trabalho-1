@@ -20,12 +20,13 @@ CostFunc = Callable[[nx.DiGraph, GenericState], float]
 
 
 def Astar(
-    searchSpace: GenericState,
     initial_state: GenericState,
         goal_check: GoalCheckFunc,
         find_neighbors: FindNeighborsFunc,
         heuristic: HeuristicFunc,
-        cost_between: CostFunc) -> Tuple[Optional[List], nx.DiGraph]:
+        cost_between: CostFunc,
+        search_space: GenericState = None
+) -> Tuple[Optional[List], nx.DiGraph]:
     """
     Implements the A* search algorithm for pathfinding in a graph. The function is a general-purpose pathfinding 
     algorithm designed to operate on any graph-like structure. This specific implementation requires the graph 
@@ -77,7 +78,7 @@ def Astar(
     # Dictionary to keep track of actual costs from start node to current
     g_cost_map = {start_node: 0}
     # Estimated total cost from start to goal through the current node
-    f_cost_map = {start_node: heuristic(initial_state, searchSpace)}
+    f_cost_map = {start_node: heuristic(initial_state, search_space)}
 
     # For path reconstruction: to keep track of the parent of each node.
     came_from = {}
@@ -94,13 +95,13 @@ def Astar(
         current_state = G.nodes[current_node]['state']
 
         # Goal check
-        if goal_check(current_state, searchSpace):
+        if goal_check(current_state, search_space):
             return (reconstruct_path(came_from, current_node, G), G)
 
         # mark node as visited
         G.nodes[current_node]['visited'] = True
 
-        neighbors = find_neighbors(current_state, searchSpace)
+        neighbors = find_neighbors(current_state, search_space)
         for neighbor in neighbors:
             # add neighbors to the graph first
             node_counter += 1
@@ -119,7 +120,7 @@ def Astar(
                 # This path to neighbor is better than any previous one. Record it
                 g_cost_map[node_counter] = child_g_cost
                 f_cost_map[node_counter] = child_g_cost + \
-                    heuristic(neighbor, searchSpace)
+                    heuristic(neighbor, search_space)
 
                 # Add the neighbor to the open set if not already present
                 heapq.heappush(
