@@ -120,7 +120,7 @@ class test_scheduler(unittest.TestCase):
         initial_state = initialize_system(self.G, 2)
 
         solution = Astar(
-            searchSpace=self.G,
+            search_space=self.G,
             initial_state=initial_state,
             goal_check=goal_check,
             find_neighbors=find_neighbors,

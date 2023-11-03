@@ -58,7 +58,6 @@ class test_sudoku(unittest.TestCase):
         """
         sudoku = create_sudoku_puzzle(4, 8)
         solution_path, _ = Astar(
-            nx.DiGraph(),
             initial_state=sudoku,
             cost_between=cost_between,
             find_neighbors=find_neighbors,
@@ -76,7 +75,7 @@ class test_sudoku(unittest.TestCase):
         Test case to check the Least Cost Path algorithm's performance on the Sudoku puzzle.
         """
         sudoku = create_sudoku_puzzle(4, 8)
-        solution = least_cost_path(
+        solution,_ = least_cost_path(
             search_space=nx.DiGraph(),
             initial_state=sudoku,
             cost_between=cost_between,
